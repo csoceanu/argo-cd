@@ -361,112 +361,46 @@ def overwrite_file(file_path, new_content):
         return False
 
 def push_and_open_pr(modified_files, commit_info=None):
-    docs_subfolder = os.environ.get("DOCS_SUBFOLDER")
+    subprocess.run(["git", "add"] + modified_files)
     
-    if docs_subfolder:
-        # Same repo scenario - create separate docs PR within the same repo
-        print("Creating separate documentation PR in the same repository...")
-        
-        # Convert relative paths to include docs subfolder for git add
-        docs_files = [f"{docs_subfolder}/{f}" if not f.startswith(docs_subfolder) else f for f in modified_files]
-        
-        # Go back to repo root for git operations
-        os.chdir("..")
-        
-        # Create and switch to docs branch
-        subprocess.run(["git", "checkout", "-b", BRANCH_NAME])
-        subprocess.run(["git", "add"] + docs_files)
-        
-        # Build commit message for same-repo docs
-        commit_msg = "Auto-generated doc updates from code changes"
-        if commit_info:
-            if 'pr_number' in commit_info:
-                commit_msg += f"\n\nSource PR: {commit_info['pr_url']}"
-                commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
-            else:
-                commit_url = f"{commit_info['repo_url']}/commit/{commit_info['current_commit']}"
-                commit_msg += f"\n\nSource commit: {commit_url}"
-                commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
-        commit_msg += "\n\nAssisted-by: Gemini"
-        
-        subprocess.run(["git", "commit", "-m", commit_msg])
-        
-        # Push docs branch to same repo with token authentication
-        gh_token = os.environ["GH_TOKEN"]
-        
-        # Get the current repo URL and add token auth
-        result = subprocess.run(["git", "config", "--get", "remote.origin.url"], capture_output=True, text=True)
-        if result.returncode == 0:
-            repo_url = result.stdout.strip()
-            # Add token authentication to the URL
-            if repo_url.startswith("https://"):
-                authenticated_url = repo_url.replace("https://", f"https://{gh_token}@")
-            else:
-                # Handle SSH URLs by converting to HTTPS with token
-                authenticated_url = repo_url.replace("git@github.com:", f"https://{gh_token}@github.com/").replace(".git", "")
-            
-            subprocess.run(["git", "remote", "set-url", "origin", authenticated_url])
-        
-        subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME])
-        
-        # Create PR in the same repository
-        pr_body = "This PR updates the following documentation files based on code changes:\n\n"
-        pr_body += "\n".join([f"- `{f}`" for f in modified_files])
-        if commit_info and 'pr_url' in commit_info:
-            pr_body += f"\n\n**Source PR:** {commit_info['pr_url']}"
-        pr_body += "\n\n*Auto-generated documentation updates assisted by Gemini AI.*"
+    # Build commit message with useful links
+    commit_msg = "Auto-generated doc updates from code changes"
+    
+    if commit_info:
+        if 'pr_number' in commit_info:
+            commit_msg += f"\n\nPR Link: {commit_info['pr_url']}"
+            commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
+        else:
+            # Fallback to commit reference if no PR info available
+            commit_url = f"{commit_info['repo_url']}/commit/{commit_info['current_commit']}"
+            commit_msg += f"\n\nCommit Link: {commit_url}"
+            commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
+    
+    commit_msg += "\n\nAssisted-by: Gemini"
+    
+    subprocess.run([
+        "git", "commit",
+        "-m", commit_msg
+    ])
+    # Add remote with token auth
+    gh_token = os.environ["GH_TOKEN"]
+    docs_repo_url = DOCS_REPO_URL.replace("https://", f"https://{gh_token}@")
 
-        subprocess.run([
-            "gh", "pr", "create",
-            "--title", "Auto-Generated Doc Updates from Code PR",
-            "--body", pr_body,
-            "--base", "master",  # or main, depending on the repo's default branch
-            "--head", BRANCH_NAME
-        ])
-        
-        print(f"Documentation PR created with branch: {BRANCH_NAME}")
-        print(f"Modified files: {', '.join(modified_files)}")
-        
-    else:
-        # Separate repo scenario - create new docs PR
-        subprocess.run(["git", "add"] + modified_files)
-        
-        # Build commit message with useful links
-        commit_msg = "Auto-generated doc updates from code changes"
-        
-        if commit_info:
-            if 'pr_number' in commit_info:
-                commit_msg += f"\n\nPR Link: {commit_info['pr_url']}"
-                commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
-            else:
-                # Fallback to commit reference if no PR info available
-                commit_url = f"{commit_info['repo_url']}/commit/{commit_info['current_commit']}"
-                commit_msg += f"\n\nCommit Link: {commit_url}"
-                commit_msg += f"\nLatest commit: {commit_info['short_hash']}"
-        
-        commit_msg += "\n\nAssisted-by: Gemini"
-        
-        subprocess.run(["git", "commit", "-m", commit_msg])
-        
-        # Add remote with token auth
-        gh_token = os.environ["GH_TOKEN"]
-        docs_repo_url = DOCS_REPO_URL.replace("https://", f"https://{gh_token}@")
+    subprocess.run(["git", "remote", "set-url", "origin", docs_repo_url])
+    subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME, "--force"])
 
-        subprocess.run(["git", "remote", "set-url", "origin", docs_repo_url])
-        subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME, "--force"])
+    # Build PR body (simple, without commit references)
+    pr_body = "This PR updates the following documentation files based on code changes:\n\n"
+    pr_body += "\n".join([f"- `{f}`" for f in modified_files])
+    pr_body += "\n\n*Note: Each commit in this PR contains references to the specific source code commits that triggered the documentation updates.*"
 
-        # Build PR body (simple, without commit references)
-        pr_body = "This PR updates the following documentation files based on code changes:\n\n"
-        pr_body += "\n".join([f"- `{f}`" for f in modified_files])
-        pr_body += "\n\n*Note: Each commit in this PR contains references to the specific source code commits that triggered the documentation updates.*"
-
-        subprocess.run([
-            "gh", "pr", "create",
-            "--title", "Auto-Generated Doc Updates from Code PR",
-            "--body", pr_body,
-            "--base", "main",
-            "--head", BRANCH_NAME
-        ])
+    subprocess.run([
+        "gh", "pr", "create",
+        "--title", "Auto-Generated Doc Updates from Code PR",
+        "--body", pr_body,
+        "--base", "main",
+        "--head", BRANCH_NAME
+    ])
 
 def main():
     parser = argparse.ArgumentParser()
@@ -550,7 +484,20 @@ def main():
                 
                 print(f"\n[Dry Run] PR body would be simple (commit reference is in commit message only)")
         else:
-            push_and_open_pr(modified_files, commit_info)
+            # Handle same-repo vs separate-repo scenarios
+            docs_subfolder = os.environ.get("DOCS_SUBFOLDER")
+            if docs_subfolder:
+                print("Same-repo scenario: preparing for PR creation...")
+                # Go back to repo root for git operations
+                os.chdir("..")
+                # Create and switch to docs branch
+                subprocess.run(["git", "checkout", "-b", BRANCH_NAME])
+                # Convert file paths to include docs subfolder prefix
+                docs_files = [f"{docs_subfolder}/{f}" if not f.startswith(docs_subfolder) else f for f in modified_files]
+                push_and_open_pr(docs_files, commit_info)
+            else:
+                print("Separate-repo scenario: creating PR...")
+                push_and_open_pr(modified_files, commit_info)
     else:
         print("All documentation is already up to date — no PR created.")
 
