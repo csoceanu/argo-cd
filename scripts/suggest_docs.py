@@ -187,40 +187,62 @@ def get_file_content_or_summaries(line_threshold=300):
     return file_data
 
 def ask_gemini_for_relevant_files(diff, file_previews):
-    context = "\n\n".join(
-        [f"File: {fname}\nPreview:\n{preview}" for fname, preview in file_previews]
-    )
-
-    prompt = f"""
-You are a documentation assistant.
-
-A code change was made in this PR (Git diff):
-{diff}
-
-Below is a list of documentation files (.adoc and .md) and a preview of their content:
-
-{context}
-
-Based on the diff, which files from this list should be updated? Return only the file paths (one per line). No explanations or extra formatting.
-"""
-
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0)
-        ),
-    )
+    all_relevant_files = []
+    batch_size = 10
     
-    # Filter out source code files - only keep documentation files (.adoc and .md)
-    suggested_files = [line.strip() for line in response.text.strip().splitlines() if line.strip()]
-    filtered_files = [f for f in suggested_files if f.endswith('.adoc') or f.endswith('.md')]
+    # Process files in batches of 10
+    for i in range(0, len(file_previews), batch_size):
+        batch = file_previews[i:i + batch_size]
+        batch_num = (i // batch_size) + 1
+        total_batches = (len(file_previews) + batch_size - 1) // batch_size
+        
+        print(f"Processing batch {batch_num}/{total_batches} ({len(batch)} files)...")
+        
+        # Create context for this batch of 10 files
+        context = "\n\n".join(
+            [f"File: {fname}\nPreview:\n{preview}" for fname, preview in batch]
+        )
+
+        prompt = f"""
+        You are a documentation assistant.
+
+        A code change was made in this PR (Git diff):
+        {diff}
+
+        Below is a list of documentation files (.adoc and .md) and their content:
+
+        {context}
+
+        Based on the diff, which files from this list should be updated? Return only the file paths (one per line). No explanations or extra formatting.
+        If no files need updates, return "NONE".
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                thinking_config=types.ThinkingConfig(thinking_budget=0)
+            ),
+        )
+        
+        result_text = response.text.strip()
+        if result_text.upper() == "NONE":
+            print(f"Batch {batch_num}: No relevant files found")
+            continue
+        
+        # Filter out source code files - only keep documentation files (.adoc and .md)
+        suggested_files = [line.strip() for line in result_text.splitlines() if line.strip()]
+        filtered_files = [f for f in suggested_files if f.endswith('.adoc') or f.endswith('.md')]
+        
+        if len(filtered_files) != len(suggested_files):
+            skipped = [f for f in suggested_files if not (f.endswith('.adoc') or f.endswith('.md'))]
+            print(f"Batch {batch_num}: Skipping non-documentation files: {skipped}")
+        
+        all_relevant_files.extend(filtered_files)
+        print(f"Batch {batch_num}: Found {len(filtered_files)} relevant files")
     
-    if len(filtered_files) != len(suggested_files):
-        skipped = [f for f in suggested_files if not (f.endswith('.adoc') or f.endswith('.md'))]
-        print(f"Skipping non-documentation files: {skipped}")
-    
-    return filtered_files
+    print(f"Total relevant files found: {len(all_relevant_files)}")
+    return all_relevant_files
 
 def load_full_content(file_path):
     try:
