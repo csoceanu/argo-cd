@@ -391,8 +391,22 @@ def push_and_open_pr(modified_files, commit_info=None):
         
         subprocess.run(["git", "commit", "-m", commit_msg])
         
-        # Push docs branch to same repo
+        # Push docs branch to same repo with token authentication
         gh_token = os.environ["GH_TOKEN"]
+        
+        # Get the current repo URL and add token auth
+        result = subprocess.run(["git", "config", "--get", "remote.origin.url"], capture_output=True, text=True)
+        if result.returncode == 0:
+            repo_url = result.stdout.strip()
+            # Add token authentication to the URL
+            if repo_url.startswith("https://"):
+                authenticated_url = repo_url.replace("https://", f"https://{gh_token}@")
+            else:
+                # Handle SSH URLs by converting to HTTPS with token
+                authenticated_url = repo_url.replace("git@github.com:", f"https://{gh_token}@github.com/").replace(".git", "")
+            
+            subprocess.run(["git", "remote", "set-url", "origin", authenticated_url])
+        
         subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME])
         
         # Create PR in the same repository
