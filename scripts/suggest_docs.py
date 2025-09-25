@@ -114,17 +114,22 @@ def setup_docs_environment():
     
     if docs_subfolder:
         # Use local subfolder (same repo)
-        print(f"Using local docs subfolder: {docs_subfolder}")
+        current_dir = os.getcwd()
+        print(f"DEBUG: Current working directory before chdir: {current_dir}")
+        print(f"DEBUG: DOCS_SUBFOLDER environment variable value: '{docs_subfolder}'")
+        print(f"DEBUG: Full path to docs subfolder: {os.path.join(current_dir, docs_subfolder)}")
         
         if not os.path.exists(docs_subfolder):
-            print(f"Error: Docs subfolder '{docs_subfolder}' not found")
+            print(f"ERROR: Docs subfolder '{docs_subfolder}' not found at {os.path.join(current_dir, docs_subfolder)}")
+            print(f"DEBUG: Contents of current directory: {os.listdir('.')}")
             return False
-            
+        
+        print(f"DEBUG: Changing to docs subfolder: {docs_subfolder}")    
         os.chdir(docs_subfolder)
         
-        # For same-repo docs, we work directly on the current branch
-        # No need to create separate branch since docs and code changes are in same PR
-        print(f"Working in docs subfolder: {os.getcwd()}")
+        final_dir = os.getcwd()
+        print(f"DEBUG: Final working directory after chdir: {final_dir}")
+        print(f"DEBUG: Contents of docs directory: {os.listdir('.')[:10]}...")  # Show first 10 items
         return True
     else:
         # Clone separate repository (existing behavior)
@@ -205,6 +210,7 @@ def get_file_content_or_summaries(line_threshold=300):
         except Exception as e:
             print(f"Skipping file {path}: {e}")
     
+    print(f"DEBUG: Returning {len(file_data)} files for processing")
     return file_data
 
 def ask_gemini_for_relevant_files(diff, file_previews):
@@ -468,6 +474,11 @@ def main():
         return
         
     file_previews = get_file_content_or_summaries()
+    print(f"DEBUG: Collected {len(file_previews)} file previews")
+
+    if not file_previews:
+        print("No documentation files found to process.")
+        return
 
     print("Asking Gemini for relevant files...")
     relevant_files = ask_gemini_for_relevant_files(diff, file_previews)
