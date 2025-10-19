@@ -389,7 +389,7 @@ def push_and_open_pr(modified_files, commit_info=None):
 
     # Clear GitHub Actions default authentication that interferes with our PAT
     subprocess.run(["git", "config", "--unset-all", "http.https://github.com/.extraheader"], 
-                   capture_output=True, stderr=subprocess.DEVNULL)
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     subprocess.run(["git", "remote", "set-url", "origin", docs_repo_url])
     subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME, "--force"])
