@@ -286,11 +286,15 @@ def ask_gemini_for_updated_content(diff, file_path, current_content):
     if is_markdown:
         format_instructions = """
 CRITICAL FORMATTING REQUIREMENTS FOR MARKDOWN FILES:
-- NEVER use markdown code fences like ```markdown or ``` to wrap the entire file content
-- Markdown files start directly with content (comments, headers, or text)
-- Use standard Markdown syntax: # for headers, ``` for code blocks, | for tables
+**MOST IMPORTANT**: The output must be RAW MARKDOWN content that can be written DIRECTLY to a .md file.
+- NEVER wrap the output in code fences like ```markdown or ``` 
+- The FIRST character of your response should be the FIRST character of the file (# for header, comment, or text)
+- The LAST character of your response should be the LAST character of the file content
+- NO "```markdown" at the beginning
+- NO "```" at the end
+- Return ONLY the raw file content, nothing else
+- Use standard Markdown syntax: # for headers, ``` for code blocks within content, | for tables
 - Table separators must be simple: |---|---|---| (no backslashes, no extra characters)
-- Do NOT add extra ``` backticks at the end of the file
 - Maintain proper table structures with correct column alignment
 - Keep all links and references intact and properly formatted
 - Use consistent indentation and spacing
@@ -300,8 +304,13 @@ CRITICAL FORMATTING REQUIREMENTS FOR MARKDOWN FILES:
     elif is_asciidoc:
         format_instructions = """
 CRITICAL FORMATTING REQUIREMENTS FOR ASCIIDOC FILES:
-- NEVER use markdown code fences like ```adoc or ``` anywhere in the file
-- AsciiDoc files start directly with content (comments, headers, or text)  
+**MOST IMPORTANT**: The output must be RAW ASCIIDOC content that can be written DIRECTLY to a .adoc file.
+- NEVER wrap the output in code fences like ```adoc or ``` or ```asciidoc
+- The FIRST character of your response should be the FIRST character of the file
+- The LAST character of your response should be the LAST character of the file content
+- NO "```adoc" or "```asciidoc" at the beginning
+- NO "```" at the end
+- Return ONLY the raw file content, nothing else
 - Use ONLY AsciiDoc syntax: ==== for headers, |=== for tables, ---- for code blocks
 - Do NOT mix markdown and AsciiDoc syntax
 - Maintain proper table structures with matching |=== opening and closing
