@@ -403,7 +403,7 @@ def push_and_open_pr(modified_files, commit_info=None):
         "gh", "pr", "create",
         "--title", "Auto-Generated Doc Updates from Code PR",
         "--body", pr_body,
-        "--base", "main",
+        "--base", "master",
         "--head", BRANCH_NAME
     ])
 
