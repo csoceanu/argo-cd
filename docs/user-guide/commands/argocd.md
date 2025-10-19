@@ -59,4 +59,3 @@ argocd [flags]
 * [argocd repo](argocd_repo.md)	 - Manage repository connection parameters
 * [argocd repocreds](argocd_repocreds.md)	 - Manage credential templates for repositories
 * [argocd version](argocd_version.md)	 - Print version information
-

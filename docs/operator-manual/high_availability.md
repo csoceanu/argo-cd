@@ -409,3 +409,36 @@ Once the endpoint is enabled you can use go profile tool to collect the CPU and 
 $ kubectl port-forward svc/argocd-metrics 8082:8082
 $ go tool pprof http://localhost:8082/debug/pprof/heap
 ```
+
+## Application Health Check
+
+Argo CD provides an `argocd app health-check` command to perform a comprehensive health check on an application. This command goes beyond basic status checks to provide detailed health information.
+
+### `argocd app health-check`
+
+The `argocd app health-check` command performs comprehensive health checks, including:
+- Application sync status
+- Resource health status
+- Pod readiness and health
+- Service connectivity checks
+- Resource drift detection
+
+**Usage:**
+
+```bash
+# Basic health check
+argocd app health-check guestbook
+
+# Continuous health monitoring every 30 seconds
+argocd app health-check guestbook --continuous --interval 30
+
+# Health check with JSON output
+argocd app health-check guestbook -o json
+```
+
+**Options:**
+
+* `--output`, `-o string`: Output format. One of: `json`, `yaml`, `wide`, `name` (default `wide`).
+* `--continuous`: Enable continuous health monitoring.
+* `--interval int`: Health check interval in seconds for continuous mode (default `10`).
+* `--timeout int`: Health check timeout in seconds (default `30`).

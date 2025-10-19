@@ -139,4 +139,3 @@ argocd app set APPNAME [flags]
 ### SEE ALSO
 
 * [argocd app](argocd_app.md)	 - Manage applications
-

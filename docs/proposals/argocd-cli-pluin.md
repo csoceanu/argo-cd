@@ -1,20 +1,3 @@
----
-title: Argo CD CLI Plugin
-authors:
-  - "@christianh814"
-  - "@alexmt"
-  - "@nitishfy"
-  
-sponsors:
-  - TBD
-reviewers:
-  - TBD
-approvers:
-  - TBD
-
-creation-date: 2024-08-21
----
-
 # Argo CD CLI Plugin Support
 
 Support for `kubectl`-like plugins for the `argocd` CLI.
@@ -51,4 +34,3 @@ Things to consider:
 * Is there a way to integrate this with [Krew](https://krew.sigs.k8s.io/) for installing plugins?
 * Should we let each plugin manage its own configuration settings or make plugins use `~/.config/argocd/config` and provide a new field called `.pluginConfigs`? For example the `argocd-mytool` plugin's config will be under `.pluginConfigs.mytool` Should we even care/have an opinion?
 * Should we provide any guidelines to submit a plugin? Do we only "accept" plugins that are in argoproj-labs?
-

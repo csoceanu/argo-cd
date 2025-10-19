@@ -1,4 +1,3 @@
-
 # Config Management Plugins
 
 Argo CD's "native" config management tools are Helm, Jsonnet, and Kustomize. If you want to use a different config
@@ -551,4 +550,3 @@ spec:
     args: ["sample args"]
   provideGitCreds: true
 ```
-

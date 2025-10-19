@@ -54,7 +54,7 @@ for their Argo CD applications. For example, the end-user can configure notifica
 
 This feature is based on applications in any namespace. See [applications in any namespace](../app-any-namespace.md) page for more information.
 
-In order to enable this feature, the Argo CD administrator must reconfigure the argocd-notification-controller workloads to add  `--application-namespaces` and `--self-service-notification-enabled` parameters to the container's startup command.
+In order to enable this feature, the Argo CD administrator must reconfigure the argocd-notification-controller workloads to add `--application-namespaces` and `--self-service-notification-enabled` parameters to the container's startup command.
 `--application-namespaces` controls the list of namespaces that Argo CD applications are in. `--self-service-notification-enabled` turns on this feature.
 
 The startup parameters for both can also be conveniently set up and kept in sync by specifying

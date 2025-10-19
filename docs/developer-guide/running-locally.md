@@ -167,6 +167,16 @@ Then log in using that password and username `admin`:
 dist/argocd login localhost:8080
 ```
 
+You can also test the new `argocd app health-check` command locally:
+
+```bash
+# Perform a basic health check on an application
+argocd app health-check guestbook
+
+# Enable continuous health monitoring for an application
+argocd app health-check guestbook --continuous --interval 30
+```
+
 ## Running Argo CD inside of K8s cluster
 ### Scale up Argo CD in your cluster
 

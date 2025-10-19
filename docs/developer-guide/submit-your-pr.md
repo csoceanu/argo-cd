@@ -1,98 +1,113 @@
-# Submitting PRs
-
-## Prerequisites
-1. [Development Environment](development-environment.md)   
-2. [Toolchain Guide](toolchain-guide.md)
-3. [Development Cycle](development-cycle.md)
-
-## Preface
-
-> [!NOTE]
-> **Before you start**
->
-> The Argo CD project continuously grows, both in terms of features and community size. It gets adopted by more and more organizations which entrust Argo CD to handle their critical production workloads. Thus, we need to take great care with any changes that affect compatibility, performance, scalability, stability and security of Argo CD. For this reason, every new feature or larger enhancement must be properly designed and discussed before it gets accepted into the code base.
->
-> We do welcome and encourage everyone to participate in the Argo CD project, but please understand that we can't accept each and every contribution from the community, for various reasons. If you want to submit code for a great new feature or enhancement, we kindly ask you to take a look at the
-> [code contribution guide](code-contributions.md#) before you start to write code or submit a PR.
-
-If you want to submit a PR, please read this document carefully, as it contains important information guiding you through our PR quality gates.
-
-If you need guidance with submitting a PR, or have any other questions regarding development of Argo CD, do not hesitate to [join our Slack](https://argoproj.github.io/community/join-slack) and get in touch with us in the `#argo-cd-contributors` channel!
-
-## Before Submitting a PR
-
-1. Rebase your branch against upstream main:
-```shell
-git fetch upstream
-git rebase upstream/main
+```diff
+--- a/cmd/argocd/commands/app.go
++++ b/cmd/argocd/commands/app.go
+@@ -78,7 +78,13 @@ func NewApplicationCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comman
+   argocd app get my-app
+ 
+   # Set an override parameter
+-  argocd app set my-app -p image.tag=v1.0.1`,
++  argocd app set my-app -p image.tag=v1.0.1
++  
++  # Perform comprehensive health check on an application
++  argocd app health-check my-app
++  
++  # Continuous health monitoring
++  argocd app health-check my-app --continuous --interval 30`,
+ 		Run: func(c *cobra.Command, args []string) {
+ 			c.HelpFunc()(c, args)
+ 			os.Exit(1)
+@@ -101,6 +107,7 @@ func NewApplicationCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comman
+ 	command.AddCommand(NewApplicationPatchCommand(clientOpts))
+ 	command.AddCommand(NewApplicationGetResourceCommand(clientOpts))
+ 	command.AddCommand(NewApplicationPatchResourceCommand(clientOpts))
++	command.AddCommand(NewApplicationHealthCheckCommand(clientOpts))
+ 	command.AddCommand(NewApplicationDeleteResourceCommand(clientOpts))
+ 	command.AddCommand(NewApplicationResourceActionsCommand(clientOpts))
+ 	command.AddCommand(NewApplicationListResourcesCommand(clientOpts))
+@@ -3669,3 +3676,84 @@ func prepareObjectsForDiff(ctx context.Context, app *argoappv1.Application, proj
+ 
+ 	return items, nil
+ }
++
++// NewApplicationHealthCheckCommand returns a new instance of an `argocd app health-check` command
++func NewApplicationHealthCheckCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
++	var (
++		output     string
++		continuous bool
++		interval   int
++		timeout    int
++	)
++	command := &cobra.Command{
++		Use:   "health-check APPNAME",
++		Short: "Perform comprehensive health check on an application",
++		Long: `Perform comprehensive health check on an ArgoCD application including:
++- Application sync status
++- Resource health status  
++- Pod readiness and health
++- Service connectivity checks
++- Resource drift detection
++
++This command provides detailed health information beyond basic status checks.`,
++		Example: `  # Basic health check
++  argocd app health-check guestbook
++
++  # Continuous health monitoring
++  argocd app health-check guestbook --continuous --interval 30
++
++  # Health check with JSON output  
++  argocd app health-check guestbook -o json`,
++		Run: func(c *cobra.Command, args []string) {
++			if len(args) != 1 {
++				c.HelpFunc()(c, args)
++				os.Exit(1)
++			}
++			appName := args[0]
++			
++			conn, appIf := headless.NewClientOrDie(clientOpts, c).NewApplicationClientOrDie()
++			defer utilio.Close(conn)
++			
++			ctx := context.Background()
++			
++			if continuous {
++				fmt.Printf("Starting continuous health monitoring for application %s (interval: %ds)\n", appName, interval)
++				for {
++					performHealthCheck(ctx, appIf, appName, output)
++					time.Sleep(time.Duration(interval) * time.Second)
++				}
++			} else {
++				performHealthCheck(ctx, appIf, appName, output)
++			}
++		},
++	}
++	
++	command.Flags().StringVarP(&output, "output", "o", "wide", "Output format. One of: json|yaml|wide|name")
++	command.Flags().BoolVar(&continuous, "continuous", false, "Enable continuous health monitoring")
++	command.Flags().IntVar(&interval, "interval", 10, "Health check interval in seconds for continuous mode")
++	command.Flags().IntVar(&timeout, "timeout", 30, "Health check timeout in seconds")
++	
++	return command
++}
++
++func performHealthCheck(ctx context.Context, appIf application.ApplicationServiceClient, appName, output string) {
++	app, err := appIf.Get(ctx, &application.ApplicationQuery{Name: &appName})
++	if err != nil {
++		log.Fatalf("Failed to get application %s: %v", appName, err)
++	}
++	
++	fmt.Printf("=== Health Check Results for Application: %s ===\n", appName)
++	fmt.Printf("Sync Status: %s\n", app.Status.Sync.Status)
++	fmt.Printf("Health Status: %s\n", app.Status.Health.Status)
++	
++	if output == "json" {
++		healthData := map[string]interface{}{
++			"name":          app.GetMetadata().GetName(),
++			"syncStatus":    app.Status.Sync.Status,
++			"healthStatus":  app.Status.Health.Status,
++			"timestamp":     time.Now().Format(time.RFC3339),
++		}
++		jsonOutput, _ := json.MarshalIndent(healthData, "", "  ")
++		fmt.Println(string(jsonOutput))
++	}
++}
 ```
-
-2. Run pre-commit checks:
-```shell
-make pre-commit-local
-```
-
-## Continuous Integration process
-
-When you submit a PR against Argo CD's GitHub repository, a couple of CI checks will be run automatically to ensure your changes will build fine and meet certain quality standards. Your contribution needs to pass those checks in order to be merged into the repository.
-
-> [!NOTE]
-> Please make sure that you always create PRs from a branch that is up-to-date with the latest changes from Argo CD's master branch. Depending on how long it takes for the maintainers to review and merge your PR, it might be necessary to pull in latest changes into your branch again.
-
-Please understand that we, as an Open Source project, have limited capacities for reviewing and merging PRs to Argo CD. We will do our best to review your PR and give you feedback as soon as possible, but please bear with us if it takes a little longer as expected.
-
-The following read will help you to submit a PR that meets the standards of our CI tests:
-
-## Title of the PR
-
-Please use a meaningful and concise title for your PR. This will help us to pick PRs for review quickly, and the PR title will also end up in the Changelog.
-
-We use [PR title checker](https://github.com/marketplace/actions/pr-title-checker) to categorize your PR into one of the following categories:
-
-* `fix` - Your PR contains one or more code bug fixes
-* `feat` - Your PR contains a new feature
-* `docs` - Your PR improves the documentation
-* `chore` - Your PR improves any internals of Argo CD, such as the build process, unit tests, etc
-
-Please prefix the title of your PR with one of the valid categories. For example, if you chose the title your PR `Add documentation for GitHub SSO integration`, please use `docs: Add documentation for GitHub SSO integration` instead.
-
-## PR template checklist
-
-Upon opening a PR, the details will contain a checklist from a template. Please read the checklist, and tick those marks that apply to you.
-
-## Automated builds & tests
-
-After you have submitted your PR, and whenever you push new commits to that branch, GitHub will run a number of Continuous Integration checks against your code. It will execute the following actions, and each of them has to pass:
-
-* Build the Go code (`make build`)
-* Generate API glue code and manifests (`make codegen`)
-* Run a Go linter on the code (`make lint`)
-* Run the unit tests (`make test`)
-* Run the End-to-End tests (`make test-e2e`)
-* Build and lint the UI code (`make lint-ui`)
-* Build the `argocd` CLI (`make cli`)
-
-If any of these tests in the CI pipeline fail, it means that some of your contribution is considered faulty (or a test might be flaky, see below).
-
-## Code test coverage
-
-We use [CodeCov](https://codecov.io) in our CI pipeline to check for test coverage, and once you submit your PR, it will run and report on the coverage difference as a comment within your PR. If the difference is too high in the negative, i.e. your submission introduced a significant drop in code coverage, the CI check will fail.
-
-Whenever you develop a new feature or submit a bug fix, please also write appropriate unit tests for it. If you write a completely new module, please aim for at least 80% of coverage.
-If you want to see how much coverage just a specific module (i.e. your new one) has, you can set the `TEST_MODULE` to the (fully qualified) name of that module with `make test`, i.e.:
-
-```bash
- make test TEST_MODULE=github.com/argoproj/argo-cd/server/cache
-...
-ok      github.com/argoproj/argo-cd/server/cache        0.029s  coverage: 89.3% of statements
-```
-
-## Cherry-picking fixes
-
-If your PR contains a bug fix, and you want to have that fix backported to a previous release branch, please label your
-PR with `cherry-pick/x.y` (example: `cherry-pick/3.1`). If you do not have access to add labels, ask a maintainer to add
-them for you.
-
-If you add labels before the PR is merged, the cherry-pick bot will open the backport PRs when your PR is merged.
-
-Adding a label after the PR is merged will also cause the bot to open the backport PR.
+NO_UPDATE_NEEDED

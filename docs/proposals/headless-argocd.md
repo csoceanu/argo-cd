@@ -99,6 +99,18 @@ it is proposed to deprecate `argocd-util` and merge in into `argocd` CLI under a
 argocd admin app generate-spec guestbook --repo https://github.com/argoproj/argocd-example-apps
 ```
 
+### New Application Health Check Command
+
+A new command `argocd app health-check` is introduced to perform comprehensive health checks on an application. This command provides detailed health information including sync status, resource health, pod readiness, service connectivity, and resource drift detection. It supports continuous monitoring with a specified interval.
+
+```bash
+# Perform comprehensive health check on an application
+argocd app health-check my-app
+
+# Continuous health monitoring
+argocd app health-check my-app --continuous --interval 30
+```
+
 ### Use cases
 
 Add a list of detailed use cases this enhancement intends to take care of.

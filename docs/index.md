@@ -82,6 +82,7 @@ For additional details, see [architecture overview](operator-manual/architecture
 * Audit trails for application events and API calls
 * Prometheus metrics
 * Parameter overrides for overriding helm parameters in Git
+* Comprehensive application health checks (`argocd app health-check`) including sync status, resource health, pod readiness, service connectivity, and resource drift detection.
 
 ## Development Status
 

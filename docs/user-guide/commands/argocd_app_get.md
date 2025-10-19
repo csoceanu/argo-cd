@@ -94,4 +94,3 @@ argocd app get APPNAME [flags]
 ### SEE ALSO
 
 * [argocd app](argocd_app.md)	 - Manage applications
-

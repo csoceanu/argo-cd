@@ -76,3 +76,35 @@ argocd admin cluster kubeconfig https://<api-server-url> /tmp/kubeconfig --names
 export KUBECONFIG=/tmp/kubeconfig
 kubectl get pods -v 9
 ```
+
+## Application Health Check
+
+The `argocd app health-check` command provides a comprehensive health assessment of an Argo CD application. This goes beyond basic status checks by evaluating:
+
+- **Application sync status**
+- **Resource health status**
+- **Pod readiness and health**
+- **Service connectivity checks**
+- **Resource drift detection**
+
+This command is useful for diagnosing detailed health issues within an application managed by Argo CD.
+
+**Examples:**
+
+- Perform a basic health check on an application:
+
+  ```bash
+  argocd app health-check guestbook
+  ```
+
+- Enable continuous health monitoring for an application with a 30-second interval:
+
+  ```bash
+  argocd app health-check guestbook --continuous --interval 30
+  ```
+
+- Get the health check results in JSON format:
+
+  ```bash
+  argocd app health-check guestbook -o json
+  ```

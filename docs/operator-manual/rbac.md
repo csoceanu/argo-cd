@@ -64,19 +64,19 @@ Syntax: `p, <role/user/group>, <resource>, <action>, <object>, <effect>`
 
 Below is a table that summarizes all possible resources and which actions are valid for each of them.
 
-| Resource\Action     | get | create | update | delete | sync | action | override | invoke |
-| :------------------ | :-: | :----: | :----: | :----: | :--: | :----: | :------: | :----: |
-| **applications**    | ✅  |   ✅   |   ✅   |   ✅   |  ✅  |   ✅   |    ✅    |   ❌   |
-| **applicationsets** | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **clusters**        | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **projects**        | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **repositories**    | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **accounts**        | ✅  |   ❌   |   ✅   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **certificates**    | ✅  |   ✅   |   ❌   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **gpgkeys**         | ✅  |   ✅   |   ❌   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **logs**            | ✅  |   ❌   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **exec**            | ❌  |   ✅   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |
-| **extensions**      | ❌  |   ❌   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ✅   |
+| Resource\Action     | get | create | update | delete | sync | action | override | invoke | health-check |
+| :------------------ | :-: | :----: | :----: | :----: | :--: | :----: | :------: | :----: | :----------: |
+| **applications**    | ✅  |   ✅   |   ✅   |   ✅   |  ✅  |   ✅   |    ✅    |   ❌   |      ✅      |
+| **applicationsets** | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **clusters**        | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌   |   ❌   |      ❌      |
+| **projects**        | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **repositories**    | ✅  |   ✅   |   ✅   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **accounts**        | ✅  |   ❌   |   ✅   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **certificates**    | ✅  |   ✅   |   ❌   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **gpgkeys**         | ✅  |   ✅   |   ❌   |   ✅   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **logs**            | ✅  |   ❌   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **exec**            | ❌  |   ✅   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ❌   |      ❌      |
+| **extensions**      | ❌  |   ❌   |   ❌   |   ❌   |  ❌  |   ❌   |    ❌    |   ✅   |      ❌      |
 
 ### Application-Specific Policy
 
@@ -86,6 +86,7 @@ Some policy only have meaning within an application. It is the case with the fol
 - `applicationsets`
 - `logs`
 - `exec`
+- `health-check`
 
 While they can be set in the global configuration, they can also be configured in [AppProject's roles](../user-guide/projects.md#project-roles).
 The expected `<object>` value in the policy structure is replaced by `<app-project>/<app-name>`.
@@ -207,6 +208,16 @@ p, example-user, applications, action/*, default/*, allow
 
 When granted along with the `sync` action, the override action will allow a user to synchronize local manifests to the Application.
 These manifests will be used instead of the configured source, until the next sync is performed.
+
+#### The `health-check` action
+
+When granted with the `health-check` action, this policy allows a user to perform detailed health checks on an application via the Argo CD CLI or UI. This includes sync status, resource health, pod readiness, and service connectivity.
+
+Example:
+```csv
+p, example-user, applications, health-check, default/guestbook, allow
+```
+This policy would allow `example-user` to perform health checks on the `guestbook` application in the `default` project.
 
 ### The `applicationsets` resource
 

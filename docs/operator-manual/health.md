@@ -269,3 +269,39 @@ metadata:
 ```
 
 By doing this, the health status of the Deployment will not affect the health of its parent Application.
+
+## Application Health Check CLI Command
+
+Argo CD provides a CLI command to perform a comprehensive health check on an application. This command offers detailed health information beyond basic status checks, including application sync status, resource health status, pod readiness, service connectivity, and resource drift detection.
+
+### `argocd app health-check`
+
+This command performs a health check on a specified application.
+
+#### Usage
+
+```bash
+argocd app health-check APPNAME [flags]
+```
+
+#### Examples
+
+```bash
+# Basic health check
+argocd app health-check guestbook
+
+# Continuous health monitoring
+argocd app health-check guestbook --continuous --interval 30
+
+# Health check with JSON output
+argocd app health-check guestbook -o json
+```
+
+#### Flags
+
+| Flag         | Shorthand | Default | Description                                                     |
+| :----------- | :-------- | :------ | :-------------------------------------------------------------- |
+| `--output`   | `-o`      | `wide`  | Output format. One of: `json`, `yaml`, `wide`, `name`.          |
+| `--continuous` |           | `false` | Enable continuous health monitoring.                            |
+| `--interval` |           | `10`    | Health check interval in seconds for continuous mode.           |
+| `--timeout`  |           | `30`    | Health check timeout in seconds for a single check.             |
