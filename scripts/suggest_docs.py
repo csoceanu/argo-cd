@@ -383,37 +383,25 @@ def push_and_open_pr(modified_files, commit_info=None):
         "-m", commit_msg
     ])
     
-    # Get token and build authenticated URL
+    # Add remote with token auth
     gh_token = os.environ["GH_TOKEN"]
-    
-    # Push directly with token in URL (bypasses git credential cache from GitHub Actions)
     docs_repo_url = DOCS_REPO_URL.replace("https://", f"https://{gh_token}@")
-    
-    print(f"Pushing to {DOCS_REPO_URL.replace('https://', 'https://***@')}...")
-    subprocess.run([
-        "git", "push",
-        docs_repo_url,
-        f"{BRANCH_NAME}:{BRANCH_NAME}",
-        "--force"
-    ])
+
+    subprocess.run(["git", "remote", "set-url", "origin", docs_repo_url])
+    subprocess.run(["git", "push", "--set-upstream", "origin", BRANCH_NAME, "--force"])
 
     # Build PR body (simple, without commit references)
     pr_body = "This PR updates the following documentation files based on code changes:\n\n"
     pr_body += "\n".join([f"- `{f}`" for f in modified_files])
     pr_body += "\n\n*Note: Each commit in this PR contains references to the specific source code commits that triggered the documentation updates.*"
 
-    # Set up environment for gh CLI to use the PAT
-    pr_env = os.environ.copy()
-    pr_env["GITHUB_TOKEN"] = gh_token
-    
-    print("Creating pull request...")
     subprocess.run([
         "gh", "pr", "create",
         "--title", "Auto-Generated Doc Updates from Code PR",
         "--body", pr_body,
         "--base", "main",
         "--head", BRANCH_NAME
-    ], env=pr_env)
+    ])
 
 def main():
     parser = argparse.ArgumentParser()
