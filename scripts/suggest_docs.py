@@ -180,7 +180,7 @@ Provide a detailed summary that would help an AI system understand when this fil
     
     return response.text.strip()
 
-def get_file_content_or_summaries(line_threshold=150):
+def get_file_content_or_summaries(line_threshold=300):
     """Get file content - full content for short files, AI summaries for long files"""
     file_data = []
     # Look for both .adoc and .md documentation files
