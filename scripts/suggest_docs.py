@@ -180,7 +180,7 @@ Provide a detailed summary that would help an AI system understand when this fil
     
     return response.text.strip()
 
-def get_file_content_or_summaries(line_threshold=300):
+def get_file_content_or_summaries(line_threshold=150):
     """Get file content - full content for short files, AI summaries for long files"""
     file_data = []
     # Look for both .adoc and .md documentation files
@@ -239,6 +239,11 @@ def ask_gemini_for_relevant_files(diff, file_previews):
         Below is a list of documentation files (.adoc and .md) and their content:
 
         {context}
+
+        CRITICAL SELECTION RULES:
+        1. ONLY select files that are DIRECTLY related to the exact code changes shown
+        2. DO NOT select files about different features, even if they seem related
+        3. When in doubt, DO NOT select the file
 
         Based on the diff, which files from this list should be updated? Return only the file paths (one per line). No explanations or extra formatting.
         If no files need updates, return "NONE".
