@@ -69,7 +69,10 @@ func NewClusterCommand(clientOpts *argocdclient.ClientOptions, pathOpts *clientc
 
   # Set a target cluster context from ArgoCD
   argocd cluster set CLUSTER_NAME --name new-cluster-name --namespace '*'
-  argocd cluster set CLUSTER_NAME --name new-cluster-name --namespace namespace-one --namespace namespace-two`,
+  argocd cluster set CLUSTER_NAME --name new-cluster-name --namespace namespace-one --namespace namespace-two
+  
+  # List clusters with label selector for filtering
+  argocd cluster list --selector env=production`,
 	}
 
 	command.AddCommand(NewClusterAddCommand(clientOpts, pathOpts))
