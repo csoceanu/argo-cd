@@ -27,6 +27,8 @@ argocd cluster list -o yaml --server <ARGOCD_SERVER_ADDRESS>
 # List Clusters that have been added to your Argo CD 
 argocd cluster list -o server <ARGOCD_SERVER_ADDRESS>
 
+# List clusters with label selector for filtering
+argocd cluster list --selector env=production
 
 ```
 
@@ -35,6 +37,7 @@ argocd cluster list -o server <ARGOCD_SERVER_ADDRESS>
 ```
   -h, --help            help for list
   -o, --output string   Output format. One of: json|yaml|wide|server (default "wide")
+      --selector string   A label selector to filter clusters by
 ```
 
 ### Options inherited from parent commands
@@ -71,4 +74,3 @@ argocd cluster list -o server <ARGOCD_SERVER_ADDRESS>
 ### SEE ALSO
 
 * [argocd cluster](argocd_cluster.md)	 - Manage cluster credentials
-

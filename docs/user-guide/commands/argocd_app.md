@@ -19,6 +19,15 @@ argocd app [flags]
 
   # Set an override parameter
   argocd app set my-app -p image.tag=v1.0.1
+  
+  # Perform comprehensive health check on an application
+  argocd app health-check my-app
+  
+  # Continuous health monitoring
+  argocd app health-check my-app --continuous --interval 30
+  
+  # Health check with JSON output for automation
+  argocd app health-check my-app -o json
 ```
 
 ### Options
@@ -90,6 +99,7 @@ argocd app [flags]
 * [argocd app edit](argocd_app_edit.md)	 - Edit application
 * [argocd app get](argocd_app_get.md)	 - Get application details
 * [argocd app get-resource](argocd_app_get-resource.md)	 - Get details about the live Kubernetes manifests of a resource in an application. The filter-fields flag can be used to only display fields you want to see.
+* [argocd app health-check](argocd_app_health-check.md)	 - Perform comprehensive health check on an application
 * [argocd app history](argocd_app_history.md)	 - Show application deployment history
 * [argocd app list](argocd_app_list.md)	 - List applications
 * [argocd app logs](argocd_app_logs.md)	 - Get logs of application pods
@@ -104,4 +114,3 @@ argocd app [flags]
 * [argocd app terminate-op](argocd_app_terminate-op.md)	 - Terminate running operation of an application
 * [argocd app unset](argocd_app_unset.md)	 - Unset application parameters
 * [argocd app wait](argocd_app_wait.md)	 - Wait for an application to reach a synced and healthy state
-
