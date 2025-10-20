@@ -84,7 +84,10 @@ func NewApplicationCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comman
   argocd app health-check my-app
   
   # Continuous health monitoring
-  argocd app health-check my-app --continuous --interval 30`,
+  argocd app health-check my-app --continuous --interval 30
+  
+  # Health check with JSON output for automation
+  argocd app health-check my-app -o json`,
 		Run: func(c *cobra.Command, args []string) {
 			c.HelpFunc()(c, args)
 			os.Exit(1)
