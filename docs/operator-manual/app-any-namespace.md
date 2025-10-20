@@ -203,6 +203,10 @@ argocd app sync foo/bar
 argocd app delete foo/bar
 # Retrieve application's manifest
 argocd app manifests foo/bar
+# Perform a health check on the application
+argocd app health-check foo/bar
+# Perform continuous health monitoring for the application
+argocd app health-check foo/bar --continuous --interval 30
 ```
 
 As stated previously, for applications in the Argo CD's control plane namespace, you can omit the namespace from the application name.

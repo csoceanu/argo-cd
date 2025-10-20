@@ -82,6 +82,7 @@ For additional details, see [architecture overview](operator-manual/architecture
 * Audit trails for application events and API calls
 * Prometheus metrics
 * Parameter overrides for overriding helm parameters in Git
+* Comprehensive health checking of applications and their resources
 
 ## Development Status
 

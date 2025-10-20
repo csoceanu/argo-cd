@@ -35,6 +35,18 @@ The following `argocd admin` command assess resource health using Lua script con
 argocd admin settings resource-overrides health ./deploy.yaml --argocd-cm-path ./argocd-cm.yaml
 ```
 
+You can also perform a comprehensive health check on an application directly:
+
+```bash
+argocd app health-check my-app
+```
+
+For continuous monitoring, use the `--continuous` flag:
+
+```bash
+argocd app health-check my-app --continuous --interval 30
+```
+
 **Resource Actions**
 
 Resource actions allows configuring named Lua script which performs resource modification.

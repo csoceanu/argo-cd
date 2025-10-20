@@ -53,3 +53,17 @@ argocd app wait guestbook
 If [automated synchronization](auto_sync.md) is configured for the application, this step is
 unnecessary. The controller will automatically detect the new config (fast tracked using a
 [webhook](../operator-manual/webhook.md), or polled at least every 3 minutes by default), and automatically sync the new manifests.
+
+## Health Check The App (Optional)
+
+After synchronization, it's often useful to perform a health check on the application to ensure all resources are running as expected.
+
+```bash
+# Perform a comprehensive health check
+argocd app health-check guestbook
+
+# Continuous health monitoring for 5 minutes
+argocd app health-check guestbook --continuous --interval 10 --timeout 300
+```
+
+The `argocd app health-check` command provides detailed health information, including application sync status, resource health, pod readiness, and service connectivity checks. It can also be run in a continuous monitoring mode.

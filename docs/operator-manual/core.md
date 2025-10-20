@@ -98,3 +98,20 @@ argocd admin dashboard -n argocd
 ```
 
 Argo CD Web UI will be available at `http://localhost:8080`
+
+### Application Health Check
+
+The `argocd app health-check` command is available in Argo CD Core to perform comprehensive health checks on applications. This command provides detailed health information beyond basic status checks, including application sync status, resource health, Pod readiness, service connectivity, and resource drift detection.
+
+Example:
+
+```bash
+# Basic health check
+argocd app health-check guestbook --core
+
+# Continuous health monitoring
+argocd app health-check guestbook --core --continuous --interval 30
+
+# Health check with JSON output
+argocd app health-check guestbook --core -o json
+```

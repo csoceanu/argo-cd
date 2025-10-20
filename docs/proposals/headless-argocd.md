@@ -98,6 +98,7 @@ it is proposed to deprecate `argocd-util` and merge in into `argocd` CLI under a
 ```
 argocd admin app generate-spec guestbook --repo https://github.com/argoproj/argocd-example-apps
 ```
+The `argocd app health-check` command is also being added as part of the `argocd` CLI, allowing for comprehensive health checks on applications.
 
 ### Use cases
 
@@ -110,6 +111,10 @@ As an Argo CD administrator, I would like to manage cluster resources using Argo
 ## Use case 2:
 
 As an Argo CD administrator, I would like to use Argo CD CLI commands and user interface to manage Argo CD applications/settings using only `kubeconf` file and without Argo CD API access.
+
+## Use case 3:
+
+As an Argo CD administrator, I would like to perform comprehensive health checks on applications, including continuous monitoring, directly from the `argocd` CLI.
 
 ### Security Considerations
 

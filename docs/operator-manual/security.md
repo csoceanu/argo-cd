@@ -291,3 +291,20 @@ memory use, it is probably safe to use a smaller ratio.
 
 Keep in mind that if a malicious user can create additional Applications, they can increase the total memory usage.
 Grant [App creation privileges](rbac.md) carefully.
+
+## Health Checks
+
+The `argocd app health-check` command performs comprehensive health checks on an application, including application sync status, resource health status, Pod readiness, service connectivity, and resource drift detection. This command provides detailed health information beyond basic status checks.
+
+### Example Usage:
+
+```bash
+# Basic health check
+argocd app health-check guestbook
+
+# Continuous health monitoring
+argocd app health-check guestbook --continuous --interval 30
+
+# Health check with JSON output
+argocd app health-check guestbook -o json
+```

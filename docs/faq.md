@@ -20,7 +20,7 @@ which might cause health check to return `Progressing` state instead of `Healthy
 * `Ingress` is considered healthy if `status.loadBalancer.ingress` list is non-empty, with at least one value
   for `hostname` or `IP`. Some ingress controllers
   ([contour](https://github.com/heptio/contour/issues/403)
-  , [traefik](https://github.com/argoproj/argo-cd/issues/968#issuecomment-451082913)) don't update
+  , [traefik](https://www.argoproj.io/argo-cd/issues/968#issuecomment-451082913)) don't update
   `status.loadBalancer.ingress` field which causes `Ingress` to stuck in `Progressing` state forever.
 
 * `StatefulSet` is considered healthy if value of `status.updatedReplicas` field matches to `spec.replicas` field. Due
@@ -373,3 +373,47 @@ If you can avoid using these features, you can avoid triggering the error. The o
    Excluding mutation webhooks from the diff could cause undesired diffing behavior.
 3. **Disable mutation webhooks when using server-side diff**: see [server-side diff docs](user-guide/diff-strategies.md#mutation-webhooks)
    for details about that feature. Disabling mutation webhooks may have undesired effects on sync behavior.
+
+## How to perform a comprehensive application health check?
+
+Argo CD provides an `argocd app health-check` command to perform a detailed health check on an application. This command goes beyond basic status checks and provides comprehensive information including:
+
+* Application sync status
+* Resource health status
+* Pod readiness and health
+* Service connectivity checks
+* Resource drift detection
+
+### Basic Health Check
+
+To perform a basic health check on an application:
+
+```bash
+argocd app health-check <APPNAME>
+```
+
+Example:
+```bash
+argocd app health-check guestbook
+```
+
+### Continuous Health Monitoring
+
+You can enable continuous health monitoring with a specified interval:
+
+```bash
+argocd app health-check <APPNAME> --continuous --interval <SECONDS>
+```
+
+Example for continuous monitoring every 30 seconds:
+```bash
+argocd app health-check guestbook --continuous --interval 30
+```
+
+### Output Formats
+
+The command supports different output formats (`json`, `yaml`, `wide`, `name`). For example, to get JSON output:
+
+```bash
+argocd app health-check <APPNAME> -o json
+```

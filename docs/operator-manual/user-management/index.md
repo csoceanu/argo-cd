@@ -445,7 +445,6 @@ Add a `rootCA` to your `oidc.config` which contains the PEM encoded root certifi
       -----END CERTIFICATE-----
 ```
 
-
 ## SSO Further Reading
 
 ### Sensitive Data and SSO Client Secrets

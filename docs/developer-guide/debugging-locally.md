@@ -1,3 +1,4 @@
+```
 # Debugging a local Argo CD instance
 
 ## Prerequisites
@@ -144,3 +145,4 @@ Finally, run the component you wish to debug from your IDE and make sure it does
 
 ## Important
 When running Argo CD components separately, ensure components aren't creating conflicts - each component needs to be up exactly once, be it running locally with the local toolchain or running from your IDE. Otherwise you may get errors about ports not available or even debugging a process that does not contain your code changes. 
+```

@@ -1,3 +1,4 @@
+```
 # Microsoft
 
 > [!NOTE]
@@ -241,3 +242,4 @@ data:
             Context 'my-argo-cd-url' updated
 
    You may get an warning if you are not using a correctly signed certs. Refer to [Why Am I Getting x509: certificate signed by unknown authority When Using The CLI?](https://argo-cd.readthedocs.io/en/stable/faq/#why-am-i-getting-x509-certificate-signed-by-unknown-authority-when-using-the-cli).
+```

@@ -225,6 +225,27 @@ This command retrieves the manifests from the repository and performs a `kubectl
 manifests. The guestbook app is now running and you can now view its resource components, logs,
 events, and assessed health status.
 
+### Checking Application Health via CLI
+
+After syncing, you can perform a comprehensive health check on your application:
+
+```bash
+argocd app health-check guestbook
+```
+
+For continuous monitoring, use the `--continuous` flag:
+
+```bash
+argocd app health-check guestbook --continuous --interval 30
+```
+
+This command provides detailed health information including:
+* Application sync status
+* Resource health status
+* Pod readiness and health
+* Service connectivity checks
+* Resource drift detection
+
 ### Syncing via UI
 
 On the Applications page, click on *Sync* button of the guestbook application:

@@ -109,4 +109,3 @@ argocd app sync [APPNAME... | -l selector | --project project-name] [flags]
 ### SEE ALSO
 
 * [argocd app](argocd_app.md)	 - Manage applications
-

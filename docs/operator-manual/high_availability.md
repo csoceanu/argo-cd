@@ -187,6 +187,39 @@ The default value is 200. You might need to increase this for an Argo CD instanc
 
 The `argocd-dex-server` uses an in-memory database, and two or more instances would have inconsistent data. `argocd-redis` is pre-configured with the understanding of only three total redis servers/sentinels.
 
+## `argocd app health-check` Command
+
+A new CLI command `argocd app health-check` has been introduced to perform comprehensive health checks on an application. This command goes beyond basic status checks to provide detailed health information.
+
+### Usage
+
+```bash
+# Basic health check
+argocd app health-check guestbook
+
+# Continuous health monitoring
+argocd app health-check guestbook --continuous --interval 30
+
+# Health check with JSON output
+argocd app health-check guestbook -o json
+```
+
+### Features
+
+The `argocd app health-check` command provides detailed health information including:
+*   Application sync status
+*   Resource health status
+*   Pod readiness and health
+*   Service connectivity checks
+*   Resource drift detection
+
+### Options
+
+*   `--continuous`: Enable continuous health monitoring. The command will repeatedly perform health checks at a specified interval.
+*   `--interval <seconds>`: Health check interval in seconds for continuous mode (default: 10 seconds).
+*   `-o, --output <format>`: Output format. One of: `json`, `yaml`, `wide`, `name` (default: `wide`).
+*   `--timeout <seconds>`: Health check timeout in seconds (default: 30 seconds).
+
 ## Monorepo Scaling Considerations
 
 Argo CD repo server maintains one repository clone locally and uses it for application manifest generation. If the manifest generation requires to change a file in the local repository clone then only one concurrent manifest generation per server instance is allowed. This limitation might significantly slowdown Argo CD if you have a mono repository with multiple applications (50+).

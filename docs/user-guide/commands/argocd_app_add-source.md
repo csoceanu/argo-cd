@@ -126,4 +126,3 @@ argocd app add-source APPNAME [flags]
 ### SEE ALSO
 
 * [argocd app](argocd_app.md)	 - Manage applications
-

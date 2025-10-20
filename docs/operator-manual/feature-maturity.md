@@ -26,6 +26,7 @@ to indicate their stability and maturity. These are the statuses of non-stable f
 | [Cluster Sharding: consistent-hashing][9] | v2.12.0    | Alpha  |
 | [Service Account Impersonation][10]       | v2.13.0    | Alpha  |
 | [Source Hydrator][11]                     | v2.14.0    | Alpha  |
+| Application Health Check                  | v2.14.0    | Alpha  |
 
 ## Unstable Configurations
 

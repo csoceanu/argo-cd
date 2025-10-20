@@ -55,5 +55,5 @@ argocd app patch-resource APPNAME [flags]
 
 ### SEE ALSO
 
-* [argocd app](argocd_app.md)	 - Manage applications
-
+* [argocd app](argocd_app.md) - Manage applications
+* [argocd app health-check](argocd_app_health-check.md) - Perform comprehensive health check on an application
