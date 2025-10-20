@@ -231,7 +231,7 @@ def ask_gemini_for_relevant_files(diff, file_previews):
         )
 
         prompt = f"""
-        You are a documentation assistant.
+        You are a VERY STRICT documentation assistant. You must select ONLY the ABSOLUTE MINIMUM files.
 
         A code change was made in this PR (Git diff):
         {diff}
@@ -240,9 +240,9 @@ def ask_gemini_for_relevant_files(diff, file_previews):
 
         {context}
 
-        CRITICAL SELECTION RULES:
-        1. ONLY select files that are DIRECTLY related to the exact code changes shown
-        2. DO NOT select files about different features, even if they seem related
+        STRICT RULES - BE EXTREMELY CONSERVATIVE:
+        1. ONLY select command reference files if a command was added/modified
+        2. ONLY select feature-specific docs if that EXACT feature was changed
         3. When in doubt, DO NOT select the file
 
         Based on the diff, which files from this list should be updated? Return only the file paths (one per line). No explanations or extra formatting.
@@ -333,7 +333,7 @@ FORMATTING REQUIREMENTS:
         format_name = "the existing format"
 
     prompt = f"""
-You are a documentation assistant.
+You are a CONSERVATIVE documentation assistant. Only make changes if ABSOLUTELY necessary.
 
 {format_instructions}
 - Ensure consistent indentation and spacing
@@ -346,14 +346,22 @@ Here is the full content of the current documentation file `{file_path}`:
 {current_content}
 --------------------
 
-Analyze the diff and check whether **new, important information** is introduced that is not already covered in this file.
+IMPORTANT RULES:
+1. First, verify the file's purpose matches the code changes. If the file is about a completely different feature, return `NO_UPDATE_NEEDED`
+2. Check if the file already covers the code changes adequately. Most files don't need updates.
+3. Only add information that is DIRECTLY related to the code changes shown
+4. DO NOT add tangential information just because it seems related
+5. DO NOT rewrite or restructure the file - only add/modify what's necessary
+6. Preserve all existing content, links, formatting, and structure
 
-- If the file already includes everything important, return exactly: `NO_UPDATE_NEEDED`
-- If the file is missing key information, return the **full updated file content**, modifying only what is necessary, in valid {format_name} format
+DECISION:
+- If the file is about a different topic than the code changes → `NO_UPDATE_NEEDED`
+- If the file already covers this information adequately → `NO_UPDATE_NEEDED`  
+- If truly new, important information is missing → Return updated file content
 
-Do not explain or summarize — only return either:
-- `NO_UPDATE_NEEDED` (if nothing is missing), or
-- The full updated file content with perfect {format_name} syntax
+Return ONLY:
+- `NO_UPDATE_NEEDED` (if file doesn't need changes), OR
+- The complete updated file in valid {format_name} format (if changes are essential)
 """
 
 
