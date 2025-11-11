@@ -23,3 +23,12 @@ This removes the cluster with the specified name.
 > **in-cluster cannot be removed**
 >
 > The `in-cluster` cluster cannot be removed with this. If you want to disable the `in-cluster` configuration, you need to update your `argocd-cm` ConfigMap. Set [`cluster.inClusterEnabled`](./argocd-cm-yaml.md) to `"false"`
+
+## Listing clusters with label selectors
+
+You can filter clusters based on labels using the `--selector` flag with `argocd cluster list`.
+
+Example:
+```bash
+argocd cluster list --selector env=production
+```
