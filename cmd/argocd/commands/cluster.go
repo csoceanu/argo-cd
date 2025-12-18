@@ -502,7 +502,10 @@ func printClusterServers(clusters []argoappv1.Cluster) {
 
 // NewClusterListCommand returns a new instance of an `argocd cluster rm` command
 func NewClusterListCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
-	var output string
+	var (
+		output string
+		quiet  bool
+	)
 	command := &cobra.Command{
 		Use:   "list",
 		Short: "List configured clusters",
@@ -513,6 +516,13 @@ func NewClusterListCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comman
 			defer utilio.Close(conn)
 			clusters, err := clusterIf.List(ctx, &clusterpkg.ClusterQuery{})
 			errors.CheckError(err)
+			if quiet {
+				// Quiet mode: print only cluster names, one per line
+				for _, c := range clusters.Items {
+					fmt.Println(c.Name)
+				}
+				return
+			}
 			switch output {
 			case "yaml", "json":
 				err := PrintResourceList(clusters.Items, output, false)
@@ -541,9 +551,13 @@ argocd cluster list -o yaml --server <ARGOCD_SERVER_ADDRESS>
 # List Clusters that have been added to your Argo CD 
 argocd cluster list -o server <ARGOCD_SERVER_ADDRESS>
 
+# List only cluster names (quiet mode)
+argocd cluster list --quiet
+
 `,
 	}
 	command.Flags().StringVarP(&output, "output", "o", "wide", "Output format. One of: json|yaml|wide|server")
+	command.Flags().BoolVarP(&quiet, "quiet", "q", false, "Only display cluster names")
 	return command
 }
 
