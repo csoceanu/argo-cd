@@ -13,6 +13,12 @@ If you're unsure about the context names, run `kubectl config get-contexts` to g
 This will connect to the cluster and install the necessary resources for ArgoCD to connect to it.
 Note that you will need privileged access to the cluster.
 
+## Listing clusters
+
+Run `argocd cluster list`.
+
+To output only cluster names, run `argocd cluster list --quiet`.
+
 ## Removing a cluster
 
 Run `argocd cluster rm context-name`.
