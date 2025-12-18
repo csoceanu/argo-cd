@@ -19,9 +19,10 @@ import (
 // NewVersionCmd returns a new `version` command to be used as a sub-command to root
 func NewVersionCmd(clientOpts *argocdclient.ClientOptions, serverVersion *version.VersionMessage) *cobra.Command {
 	var (
-		short  bool
-		client bool
-		output string
+		short   bool
+		client  bool
+		output  string
+		verbose bool
 	)
 
 	versionCmd := cobra.Command{
@@ -38,6 +39,9 @@ func NewVersionCmd(clientOpts *argocdclient.ClientOptions, serverVersion *versio
 
   # Print only client and server core version strings in YAML format
   argocd version --short -o yaml
+
+  # Print version with additional build and dependency details
+  argocd version --verbose
 `,
 		Run: func(cmd *cobra.Command, _ []string) {
 			ctx := cmd.Context()
@@ -89,6 +93,7 @@ func NewVersionCmd(clientOpts *argocdclient.ClientOptions, serverVersion *versio
 	versionCmd.Flags().StringVarP(&output, "output", "o", "wide", "Output format. One of: json|yaml|wide|short")
 	versionCmd.Flags().BoolVar(&short, "short", false, "print just the version number")
 	versionCmd.Flags().BoolVar(&client, "client", false, "client version only (no server required)")
+	versionCmd.Flags().BoolVar(&verbose, "verbose", false, "include additional build and dependency information")
 	return &versionCmd
 }
 
