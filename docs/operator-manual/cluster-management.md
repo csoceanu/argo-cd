@@ -4,6 +4,13 @@ This guide is for operators looking to manage clusters on the CLI. If you want t
 
 Not all commands are described here, see the [argocd cluster Command Reference](../user-guide/commands/argocd_cluster.md) for all available commands.
 
+## Listing clusters
+
+Run `argocd cluster list`.
+
+To list only cluster names, use the quiet flag:
+`argocd cluster list --quiet`
+
 ## Adding a cluster
 
 Run `argocd cluster add context-name`.
