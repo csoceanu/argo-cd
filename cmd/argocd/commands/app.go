@@ -132,6 +132,7 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 		annotations  []string
 		setFinalizer bool
 		appNamespace string
+		dryRun       bool
 	)
 	command := &cobra.Command{
 		Use:   "create APPNAME",
@@ -162,6 +163,14 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 			argocdClient := headless.NewClientOrDie(clientOpts, c)
 			apps, err := cmdutil.ConstructApps(fileURL, appName, labels, annotations, args, appOpts, c.Flags())
 			errors.CheckError(err)
+
+			if dryRun {
+				fmt.Printf("Dry run: would create %d application(s)\n", len(apps))
+				for _, app := range apps {
+					fmt.Printf("  - %s (namespace: %s)\n", app.Name, app.Namespace)
+				}
+				return
+			}
 
 			for _, app := range apps {
 				if app.Name == "" {
@@ -208,6 +217,7 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 		},
 	}
 	command.Flags().StringVar(&appName, "name", "", "A name for the app, ignored if a file is set (DEPRECATED)")
+	command.Flags().BoolVar(&dryRun, "dry-run", false, "Preview the application that would be created without actually creating it")
 	command.Flags().BoolVar(&upsert, "upsert", false, "Allows to override application with the same name even if supplied application spec is different from existing spec")
 	command.Flags().StringVarP(&fileURL, "file", "f", "", "Filename or URL to Kubernetes manifests for the app")
 	command.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "Labels to apply to the app")
