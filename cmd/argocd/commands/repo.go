@@ -56,6 +56,8 @@ argocd repo rm https://github.com/yourusername/your-repo.git
 // NewRepoAddCommand returns a new instance of an `argocd repo add` command
 func NewRepoAddCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 	var repoOpts cmdutil.RepoOptions
+	var verifyConnection bool
+	var connectionTimeout int
 
 	// For better readability and easier formatting
 	repoAddExamples := `  # Add a Git repository via SSH using a private key for authentication, ignoring the server's host key:
@@ -106,7 +108,7 @@ func NewRepoAddCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 
 	command := &cobra.Command{
 		Use:     "add REPOURL",
-		Short:   "Add git, oci or helm repository connection parameters",
+		Short:   "Add and verify a git, OCI, or Helm repository connection",
 		Example: repoAddExamples,
 		Run: func(c *cobra.Command, args []string) {
 			ctx := c.Context()

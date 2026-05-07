@@ -88,10 +88,12 @@ func NewClusterAddCommand(clientOpts *argocdclient.ClientOptions, pathOpts *clie
 		skipConfirmation bool
 		labels           []string
 		annotations      []string
+		healthCheck      bool
+		connectionTimeout int
 	)
 	command := &cobra.Command{
 		Use:   "add CONTEXT",
-		Short: cliName + " cluster add CONTEXT",
+		Short: "Register a cluster's credentials to Argo CD and verify connectivity",
 		Run: func(c *cobra.Command, args []string) {
 			ctx := c.Context()
 

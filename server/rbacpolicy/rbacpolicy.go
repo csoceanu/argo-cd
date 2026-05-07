@@ -13,12 +13,13 @@ import (
 )
 
 // RBACPolicyEnforcer provides an RBAC Claims Enforcer which additionally consults AppProject
-// roles, jwt tokens, and groups. It is backed by a AppProject informer/lister cache and does not
-// make any API calls during enforcement.
+// roles, jwt tokens, groups, and resource-level permissions. It is backed by a AppProject
+// informer/lister cache and does not make any API calls during enforcement.
 type RBACPolicyEnforcer struct {
 	enf        *rbac.Enforcer
 	projLister applister.AppProjectNamespaceLister
 	scopes     []string
+	auditLog   bool
 }
 
 // NewRBACPolicyEnforcer returns a new RBAC Enforcer for the Argo CD API Server

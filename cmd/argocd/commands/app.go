@@ -373,13 +373,14 @@ func NewApplicationGetCommand(clientOpts *argocdclient.ClientOptions) *cobra.Com
 		timeout        uint
 		showParams     bool
 		showOperation  bool
+		showHealth     bool
 		appNamespace   string
 		sourcePosition int
 		sourceName     string
 	)
 	command := &cobra.Command{
 		Use:   "get APPNAME",
-		Short: "Get application details",
+		Short: "Get application details, health status, and sync state",
 		Example: templates.Examples(`
   # Get basic details about the application "my-app" in wide format
   argocd app get my-app -o wide
@@ -1676,10 +1677,12 @@ func NewApplicationDeleteCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 		selector          string
 		wait              bool
 		appNamespace      string
+		gracePeriod       int
+		force             bool
 	)
 	command := &cobra.Command{
 		Use:   "delete APPNAME",
-		Short: "Delete an application",
+		Short: "Delete an application and its resources",
 		Example: `  # Delete an app
   argocd app delete my-app
 
@@ -2127,10 +2130,12 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 		output                  string
 		appNamespace            string
 		ignoreNormalizerOpts    normalizers.IgnoreNormalizerOpts
+		syncTimeout             int
+		preSync                 bool
 	)
 	command := &cobra.Command{
 		Use:   "sync [APPNAME... | -l selector | --project project-name]",
-		Short: "Sync an application to its target state",
+		Short: "Sync an application to its target state and wait for health",
 		Example: `  # Sync an app
   argocd app sync my-app
 

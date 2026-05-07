@@ -103,13 +103,15 @@ func humanizeTimestamp(epoch int64) string {
 // NewProjectCreateCommand returns a new instance of an `argocd proj create` command
 func NewProjectCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 	var (
-		opts    cmdutil.ProjectOpts
-		fileURL string
-		upsert  bool
+		opts       cmdutil.ProjectOpts
+		fileURL    string
+		upsert     bool
+		dryRun     bool
+		outputFmt  string
 	)
 	command := &cobra.Command{
 		Use:   "create PROJECT",
-		Short: "Create a project",
+		Short: "Create a project with access controls and resource restrictions",
 		Example: templates.Examples(`
 			# Create a new project with name PROJECT
 			argocd proj create PROJECT
