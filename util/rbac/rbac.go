@@ -35,10 +35,12 @@ import (
 const (
 	ConfigMapPolicyCSVKey     = "policy.csv"
 	ConfigMapPolicyDefaultKey = "policy.default"
+	ConfigMapPolicyScopeKey   = "policy.scope"
 	ConfigMapScopesKey        = "scopes"
 	ConfigMapMatchModeKey     = "policy.matchMode"
 	GlobMatchMode             = "glob"
 	RegexMatchMode            = "regex"
+	PrefixMatchMode           = "prefix"
 
 	defaultRBACSyncPeriod = 10 * time.Minute
 )
