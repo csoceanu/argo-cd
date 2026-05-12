@@ -2002,6 +2002,17 @@ func (s *Server) Sync(ctx context.Context, syncReq *application.ApplicationSyncR
 
 	s.inferResourcesStatusHealth(a)
 
+	// Check application-level sync windows first (override project-level)
+	if a.Spec.SyncWindows != nil {
+		canSync, err := a.Spec.SyncWindows.CanSync(true)
+		if err != nil {
+			return a, status.Errorf(codes.PermissionDenied, "cannot sync: invalid app-level sync window: %v", err)
+		}
+		if !canSync {
+			return a, status.Errorf(codes.PermissionDenied, "cannot sync: blocked by app-level sync window")
+		}
+	}
+
 	canSync, err := proj.Spec.SyncWindows.Matches(a).CanSync(true)
 	if err != nil {
 		return a, status.Errorf(codes.PermissionDenied, "cannot sync: invalid sync window: %v", err)

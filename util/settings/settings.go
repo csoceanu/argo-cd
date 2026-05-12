@@ -441,10 +441,14 @@ const (
 	settingDexConfigKey = "dex.config"
 	// settingsOIDCConfigKey designates the key for OIDC config
 	settingsOIDCConfigKey = "oidc.config"
-	// statusBadgeEnabledKey holds the key which enables of disables status badge feature
+	// statusBadgeEnabledKey holds the key which enables or disables status badge feature
 	statusBadgeEnabledKey = "statusbadge.enabled"
 	// statusBadgeRootURLKey holds the key for the root badge URL override
 	statusBadgeRootURLKey = "statusbadge.url"
+	// statusBadgeFormatKey holds the key for the badge output format (svg or png)
+	statusBadgeFormatKey = "statusbadge.format"
+	// maxConcurrentReconciliationsKey holds the key for max concurrent app reconciliations
+	maxConcurrentReconciliationsKey = "controller.max.concurrent.reconciliations"
 	// settingsWebhookGitHubSecret is the key for the GitHub shared webhook secret
 	settingsWebhookGitHubSecretKey = "webhook.github.secret"
 	// settingsWebhookGitLabSecret is the key for the GitLab shared webhook secret

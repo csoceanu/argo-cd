@@ -124,18 +124,21 @@ type watchOpts struct {
 // NewApplicationCreateCommand returns a new instance of an `argocd app create` command
 func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 	var (
-		appOpts      cmdutil.AppOptions
-		fileURL      string
-		appName      string
-		upsert       bool
-		labels       []string
-		annotations  []string
-		setFinalizer bool
-		appNamespace string
+		appOpts        cmdutil.AppOptions
+		fileURL        string
+		appName        string
+		upsert         bool
+		labels         []string
+		annotations    []string
+		setFinalizer   bool
+		appNamespace   string
+		dryRun         bool
+		createTimeout  int
+		skipValidation bool
 	)
 	command := &cobra.Command{
 		Use:   "create APPNAME",
-		Short: "Create an application",
+		Short: "Create an application from a Git repository, Helm chart, or local manifest",
 		Example: `  # Create a directory app
   argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-namespace default --dest-server https://kubernetes.default.svc --directory-recurse
 
@@ -151,6 +154,12 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
   # Create a Kustomize app
   argocd app create kustomize-guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path kustomize-guestbook --dest-namespace default --dest-server https://kubernetes.default.svc --kustomize-image quay.io/argoprojlabs/argocd-e2e-container:0.1
 
+  # Create an app with a timeout
+  argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-namespace default --dest-server https://kubernetes.default.svc --create-timeout 120
+
+  # Create an app skipping validation
+  argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-namespace default --dest-server https://kubernetes.default.svc --skip-validation
+
   # Create a MultiSource app while yaml file contains an application with multiple sources
   argocd app create guestbook --file <path-to-yaml-file>
 
@@ -162,6 +171,20 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 			argocdClient := headless.NewClientOrDie(clientOpts, c)
 			apps, err := cmdutil.ConstructApps(fileURL, appName, labels, annotations, args, appOpts, c.Flags())
 			errors.CheckError(err)
+
+			if dryRun {
+				fmt.Printf("Dry run: would create %d application(s)\n", len(apps))
+				for _, app := range apps {
+					fmt.Printf("  - %s (namespace: %s)\n", app.Name, app.Namespace)
+				}
+				return
+			}
+
+			if createTimeout > 0 {
+				var cancel context.CancelFunc
+				ctx, cancel = context.WithTimeout(ctx, time.Duration(createTimeout)*time.Second)
+				defer cancel()
+			}
 
 			for _, app := range apps {
 				if app.Name == "" {
@@ -176,10 +199,11 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 				}
 				conn, appIf := argocdClient.NewApplicationClientOrDie()
 				defer utilio.Close(conn)
+				validate := appOpts.Validate && !skipValidation
 				appCreateRequest := application.ApplicationCreateRequest{
 					Application: app,
 					Upsert:      &upsert,
-					Validate:    &appOpts.Validate,
+					Validate:    &validate,
 				}
 
 				// Get app before creating to see if it is being updated or no change
@@ -208,6 +232,9 @@ func NewApplicationCreateCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 		},
 	}
 	command.Flags().StringVar(&appName, "name", "", "A name for the app, ignored if a file is set (DEPRECATED)")
+	command.Flags().BoolVar(&dryRun, "dry-run", false, "Preview the application that would be created without actually creating it")
+	command.Flags().IntVar(&createTimeout, "create-timeout", 0, "Timeout in seconds for the create operation (0 means no timeout)")
+	command.Flags().BoolVar(&skipValidation, "skip-validation", false, "Skip client-side and server-side validation of the application spec")
 	command.Flags().BoolVar(&upsert, "upsert", false, "Allows to override application with the same name even if supplied application spec is different from existing spec")
 	command.Flags().StringVarP(&fileURL, "file", "f", "", "Filename or URL to Kubernetes manifests for the app")
 	command.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "Labels to apply to the app")
@@ -346,13 +373,14 @@ func NewApplicationGetCommand(clientOpts *argocdclient.ClientOptions) *cobra.Com
 		timeout        uint
 		showParams     bool
 		showOperation  bool
+		showHealth     bool
 		appNamespace   string
 		sourcePosition int
 		sourceName     string
 	)
 	command := &cobra.Command{
 		Use:   "get APPNAME",
-		Short: "Get application details",
+		Short: "Get application details, health status, and sync state",
 		Example: templates.Examples(`
   # Get basic details about the application "my-app" in wide format
   argocd app get my-app -o wide
@@ -1649,10 +1677,12 @@ func NewApplicationDeleteCommand(clientOpts *argocdclient.ClientOptions) *cobra.
 		selector          string
 		wait              bool
 		appNamespace      string
+		gracePeriod       int
+		force             bool
 	)
 	command := &cobra.Command{
 		Use:   "delete APPNAME",
-		Short: "Delete an application",
+		Short: "Delete an application and its resources",
 		Example: `  # Delete an app
   argocd app delete my-app
 
@@ -2100,10 +2130,12 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 		output                  string
 		appNamespace            string
 		ignoreNormalizerOpts    normalizers.IgnoreNormalizerOpts
+		syncTimeout             int
+		preSync                 bool
 	)
 	command := &cobra.Command{
 		Use:   "sync [APPNAME... | -l selector | --project project-name]",
-		Short: "Sync an application to its target state",
+		Short: "Sync an application to its target state and wait for health",
 		Example: `  # Sync an app
   argocd app sync my-app
 

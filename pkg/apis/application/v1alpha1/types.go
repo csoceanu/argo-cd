@@ -77,6 +77,9 @@ type ApplicationSpec struct {
 	// Project is a reference to the project this application belongs to.
 	// The empty string means that application belongs to the 'default' project.
 	Project string `json:"project" protobuf:"bytes,3,name=project"`
+	// SyncWindows defines time windows during which syncs are allowed or denied for this application.
+	// Overrides project-level sync windows when set.
+	SyncWindows SyncWindows `json:"syncWindows,omitempty" protobuf:"bytes,12,name=syncWindows"`
 	// SyncPolicy controls when and how a sync will be performed
 	SyncPolicy *SyncPolicy `json:"syncPolicy,omitempty" protobuf:"bytes,4,name=syncPolicy"`
 	// IgnoreDifferences is a list of resources and their fields which should be ignored during comparison

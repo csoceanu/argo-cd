@@ -110,7 +110,7 @@ argocd login <ARGOCD_SERVER>
 ```
 
 > [!NOTE]
-> The CLI environment must be able to communicate with the Argo CD API server. If it isn't directly accessible as described above in step 3, you can tell the CLI to access it using port forwarding through one of these mechanisms: 1) add `--port-forward-namespace argocd` flag to every CLI command; or 2) set `ARGOCD_OPTS` environment variable: `export ARGOCD_OPTS='--port-forward-namespace argocd'`.
+> The CLI environment must be able to communicate with the Argo CD API server. If it isn't directly accessible as described above in step 3, you can tell the CLI to access it using port forwarding through one of these mechanisms: 1) add `--namespace argocd` flag to every CLI command; or 2) set `ARGOCD_OPTS` environment variable: `export ARGOCD_OPTS='--namespace argocd'`. (`--port-forward-namespace` is deprecated in favor of `--namespace`.)
 
 Change the password using the command:
 
@@ -236,3 +236,4 @@ A panel will be opened and then, click on *Synchronize* button.
 You can see more details by clicking at the guestbook application:
 
 ![view app](assets/guestbook-tree.png)
+
