@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "built_at": "2026-05-12T00:00:00Z",
+  "docs_root": "/workspace/repos/argo-cd/docs",
+  "folders": {
+    "root": { "file_count": 12, "index_file": "root.md" },
+    "developer-guide": { "file_count": 27, "index_file": "developer-guide.md" },
+    "operator-manual": { "file_count": 142, "index_file": "operator-manual.md" },
+    "user-guide": { "file_count": 204, "index_file": "user-guide.md" },
+    "proposals": { "file_count": 33, "index_file": "proposals.md" },
+    "snyk": { "file_count": 1, "index_file": "snyk.md" }
+  }
+}
