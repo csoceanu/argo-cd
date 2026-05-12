@@ -236,3 +236,4 @@ A panel will be opened and then, click on *Synchronize* button.
 You can see more details by clicking at the guestbook application:
 
 ![view app](assets/guestbook-tree.png)
+
