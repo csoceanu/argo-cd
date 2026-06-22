@@ -1,0 +1,96 @@
+{
+  "version": "1.0",
+  "files": {
+    "operator-manual/applicationset/Generators-Git.md": {
+      "hash": "cceaec6372ef7a74a76ad7187332abf50be0b200e2401dfe06eb9e4b9d6c47ef",
+      "generated": "2026-06-22T12:32:24.881258",
+      "summary_file": "operator-manual-applicationset-Generators-Git.md.summary.md"
+    },
+    "operator-manual/applicationset/GoTemplate.md": {
+      "hash": "0c064ba8523f362e461d8163b1174bb8b20bc1ce77e6432a3b89457248a8bc01",
+      "generated": "2026-06-22T12:32:25.111883",
+      "summary_file": "operator-manual-applicationset-GoTemplate.md.summary.md"
+    },
+    "operator-manual/user-management/index.md": {
+      "hash": "78aa8e8c9c767c240bf5578e9999c1c2776a233c4b89342769d7bdcd57e7d940",
+      "generated": "2026-06-22T12:32:26.497394",
+      "summary_file": "operator-manual-user-management-index.md.summary.md"
+    },
+    "operator-manual/declarative-setup.md": {
+      "hash": "83440a8405a4076a58dbecd894078983391343b23ff44b3028369b2ad6f0af2e",
+      "generated": "2026-06-22T12:32:28.472462",
+      "summary_file": "operator-manual-declarative-setup.md.summary.md"
+    },
+    "operator-manual/ingress.md": {
+      "hash": "3473ff1b44c5e64ac61a4fb149b4081d060f91e4d0da3d3aa8518abbbec92d8a",
+      "generated": "2026-06-22T12:32:28.851381",
+      "summary_file": "operator-manual-ingress.md.summary.md"
+    },
+    "operator-manual/metrics.md": {
+      "hash": "a6fe1bbd3d911dd2f34e165ad4784b8e95d8d239b0a0cbbd12c14e061dc3cb34",
+      "generated": "2026-06-22T12:32:33.081389",
+      "summary_file": "operator-manual-metrics.md.summary.md"
+    },
+    "operator-manual/rbac.md": {
+      "hash": "aefb8b76120f5bee475bb9082e63b09fb997c0c8a036900e591c2f1dbe14e922",
+      "generated": "2026-06-22T12:32:35.076354",
+      "summary_file": "operator-manual-rbac.md.summary.md"
+    },
+    "operator-manual/applicationset/Generators-SCM-Provider.md": {
+      "hash": "4937a3154a98ff384ad0abdbe4936443c6165fd337acd163e45e8d1341813ef3",
+      "generated": "2026-06-22T12:32:35.400359",
+      "summary_file": "operator-manual-applicationset-Generators-SCM-Provider.md.summary.md"
+    },
+    "operator-manual/applicationset/Generators-Cluster.md": {
+      "hash": "40a95ee5e2aca5fbe12a3b914eec4bb0cad960266dab70be720e68b3a218618a",
+      "generated": "2026-06-22T12:32:36.163732",
+      "summary_file": "operator-manual-applicationset-Generators-Cluster.md.summary.md"
+    },
+    "operator-manual/applicationset/Generators-Pull-Request.md": {
+      "hash": "685d35c1d0e624473da1de934ad00135d2e8ecd639830bbd7f42e5426be7d2cc",
+      "generated": "2026-06-22T12:32:38.996812",
+      "summary_file": "operator-manual-applicationset-Generators-Pull-Request.md.summary.md"
+    },
+    "operator-manual/applicationset/Generators-Matrix.md": {
+      "hash": "ad21f84bcf33ecac1ae091e840df99a369571a4916b6d6486f68ec9a9fc43649",
+      "generated": "2026-06-22T12:32:41.980139",
+      "summary_file": "operator-manual-applicationset-Generators-Matrix.md.summary.md"
+    },
+    "operator-manual/applicationset/Generators-Plugin.md": {
+      "hash": "3b59b1663cd9670ce393084b934b6890c4980fc1ab857cd0d6294edb87890cad",
+      "generated": "2026-06-22T12:32:44.472337",
+      "summary_file": "operator-manual-applicationset-Generators-Plugin.md.summary.md"
+    },
+    "operator-manual/applicationset/Controlling-Resource-Modification.md": {
+      "hash": "e161cd9827130e0cae2f05c0bb3179a0c3286a1e05f7ae3f923cad8d7cb34845",
+      "generated": "2026-06-22T12:32:45.234471",
+      "summary_file": "operator-manual-applicationset-Controlling-Resource-Modification.md.summary.md"
+    },
+    "operator-manual/high_availability.md": {
+      "hash": "f5efb0453905f144b8b6925ef36e1911f87c46c614d8201b7663cb964063897c",
+      "generated": "2026-06-22T12:32:45.892656",
+      "summary_file": "operator-manual-high_availability.md.summary.md"
+    },
+    "operator-manual/config-management-plugins.md": {
+      "hash": "9e2d1e125b2bcba6643618a0a3539f7650f7932b8847bcace6732bb33b4d5c23",
+      "generated": "2026-06-22T12:32:49.367547",
+      "summary_file": "operator-manual-config-management-plugins.md.summary.md"
+    },
+    "operator-manual/notifications/catalog.md": {
+      "hash": "6d9634c34a8345cb97da739806ef73d02d4ec1ac2ed66c1bde55a7169875d3dc",
+      "generated": "2026-06-22T12:32:53.240245",
+      "summary_file": "operator-manual-notifications-catalog.md.summary.md"
+    },
+    "operator-manual/upgrading/2.14-3.0.md": {
+      "hash": "e81691f4f29af7ff5c7fa286affd6faaf717512a30a3d24457d6e5a32d191a83",
+      "generated": "2026-06-22T12:32:53.313734",
+      "summary_file": "operator-manual-upgrading-2.14-3.0.md.summary.md"
+    },
+    "faq.md": {
+      "hash": "bd938d7e40f9e25b2cd039656fd83ecd8e1c1e0baaf9df23b6e2c160cfecbaad",
+      "generated": "2026-06-22T12:32:55.643789",
+      "summary_file": "faq.md.summary.md"
+    }
+  },
+  "updated": "2026-06-22T12:32:55.643828"
+}
