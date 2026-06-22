@@ -8,6 +8,8 @@ Run ArgoCD Application Controller
 
 ArgoCD application controller is a Kubernetes controller that continuously monitors running applications and compares the current, live state against the desired target state (as specified in the repo). This command runs Application Controller in the foreground.  It can be configured by following options.
 
+> **Note:** The controller supports horizontal scaling via sharding. See the [High Availability](../high_availability.md) guide for details on scaling strategies.
+
 ```
 argocd-application-controller [flags]
 ```
