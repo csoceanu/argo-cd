@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "files": {
+    "operator-manual/metrics.md": {
+      "hash": "a6fe1bbd3d911dd2f34e165ad4784b8e95d8d239b0a0cbbd12c14e061dc3cb34",
+      "generated": "2026-06-22T13:22:35.574874",
+      "summary_file": "operator-manual-metrics.md.summary.md"
+    },
+    "operator-manual/rbac.md": {
+      "hash": "aefb8b76120f5bee475bb9082e63b09fb997c0c8a036900e591c2f1dbe14e922",
+      "generated": "2026-06-22T13:22:36.046337",
+      "summary_file": "operator-manual-rbac.md.summary.md"
+    },
+    "operator-manual/declarative-setup.md": {
+      "hash": "83440a8405a4076a58dbecd894078983391343b23ff44b3028369b2ad6f0af2e",
+      "generated": "2026-06-22T13:22:36.105555",
+      "summary_file": "operator-manual-declarative-setup.md.summary.md"
+    },
+    "faq.md": {
+      "hash": "bd938d7e40f9e25b2cd039656fd83ecd8e1c1e0baaf9df23b6e2c160cfecbaad",
+      "generated": "2026-06-22T13:22:36.247244",
+      "summary_file": "faq.md.summary.md"
+    },
+    "operator-manual/ingress.md": {
+      "hash": "3473ff1b44c5e64ac61a4fb149b4081d060f91e4d0da3d3aa8518abbbec92d8a",
+      "generated": "2026-06-22T13:22:36.893144",
+      "summary_file": "operator-manual-ingress.md.summary.md"
+    },
+    "operator-manual/high_availability.md": {
+      "hash": "f5efb0453905f144b8b6925ef36e1911f87c46c614d8201b7663cb964063897c",
+      "generated": "2026-06-22T13:22:45.446534",
+      "summary_file": "operator-manual-high_availability.md.summary.md"
+    },
+    "operator-manual/config-management-plugins.md": {
+      "hash": "9e2d1e125b2bcba6643618a0a3539f7650f7932b8847bcace6732bb33b4d5c23",
+      "generated": "2026-06-22T13:22:47.164169",
+      "summary_file": "operator-manual-config-management-plugins.md.summary.md"
+    }
+  },
+  "updated": "2026-06-22T13:22:47.164228"
+}
