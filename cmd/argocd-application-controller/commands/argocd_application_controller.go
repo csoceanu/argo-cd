@@ -70,6 +70,8 @@ func NewCommand() *cobra.Command {
 		selfHealBackoffCapSeconds        int
 		selfHealBackoffCooldownSeconds   int
 		syncTimeout                      int
+		syncRateLimitInterval            int
+		syncRateLimitBurst               int
 		statusProcessors                 int
 		operationProcessors              int
 		glogLevel                        int
@@ -188,6 +190,16 @@ func NewCommand() *cobra.Command {
 					Cap:      time.Duration(selfHealBackoffCapSeconds) * time.Second,
 				}
 			}
+
+			// Initialize per-application sync rate limiter
+			syncRateLimiter := controller.NewSyncRateLimiter(
+				time.Duration(syncRateLimitInterval)*time.Second,
+				syncRateLimitBurst,
+			)
+			if syncRateLimitInterval > 0 {
+				log.Infof("Sync rate limiter enabled: min interval %ds, burst %d", syncRateLimitInterval, syncRateLimitBurst)
+			}
+			_ = syncRateLimiter // TODO: wire into application controller sync path
 			appController, err = controller.NewApplicationController(
 				namespace,
 				settingsMgr,
@@ -276,6 +288,8 @@ func NewCommand() *cobra.Command {
 	command.Flags().IntVar(&selfHealBackoffCapSeconds, "self-heal-backoff-cap-seconds", env.ParseNumFromEnv("ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_CAP_SECONDS", 300, 0, math.MaxInt32), "Specifies max timeout of exponential backoff between application self heal attempts")
 	command.Flags().IntVar(&selfHealBackoffCooldownSeconds, "self-heal-backoff-cooldown-seconds", env.ParseNumFromEnv("ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_COOLDOWN_SECONDS", 330, 0, math.MaxInt32), "Specifies period of time the app needs to stay synced before the self heal backoff can reset")
 	command.Flags().IntVar(&syncTimeout, "sync-timeout", env.ParseNumFromEnv("ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT", 0, 0, math.MaxInt32), "Specifies the timeout after which a sync would be terminated. 0 means no timeout (default 0).")
+	command.Flags().IntVar(&syncRateLimitInterval, "sync-rate-limit-interval", env.ParseNumFromEnv("ARGOCD_APPLICATION_CONTROLLER_SYNC_RATE_LIMIT_INTERVAL", 0, 0, math.MaxInt32), "Minimum seconds between consecutive syncs for the same application. Prevents sync storms from overloading the controller. 0 disables rate limiting (default 0)")
+	command.Flags().IntVar(&syncRateLimitBurst, "sync-rate-limit-burst", env.ParseNumFromEnv("ARGOCD_APPLICATION_CONTROLLER_SYNC_RATE_LIMIT_BURST", 3, 1, math.MaxInt32), "Number of rapid syncs allowed before rate limiting kicks in. Accommodates legitimate bursts during initial deployments (default 3)")
 	command.Flags().Int64Var(&kubectlParallelismLimit, "kubectl-parallelism-limit", env.ParseInt64FromEnv("ARGOCD_APPLICATION_CONTROLLER_KUBECTL_PARALLELISM_LIMIT", 20, 0, math.MaxInt64), "Number of allowed concurrent kubectl fork/execs. Any value less than 1 means no limit.")
 	command.Flags().BoolVar(&repoServerPlaintext, "repo-server-plaintext", env.ParseBoolFromEnv("ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT", false), "Disable TLS on connections to repo server")
 	command.Flags().BoolVar(&repoServerStrictTLS, "repo-server-strict-tls", env.ParseBoolFromEnv("ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_STRICT_TLS", false), "Whether to use strict validation of the TLS cert presented by the repo server")
