@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "files": {
+    "proposals/config-management-plugin-v2.md": {
+      "hash": "655bd18ae845eb5a54187972c824f632af0d932db5fe2cc79fef22978b759527",
+      "generated": "2026-06-22T12:46:54.295346",
+      "summary_file": "proposals-config-management-plugin-v2.md.summary.md"
+    },
+    "operator-manual/metrics.md": {
+      "hash": "a6fe1bbd3d911dd2f34e165ad4784b8e95d8d239b0a0cbbd12c14e061dc3cb34",
+      "generated": "2026-06-22T12:46:54.682299",
+      "summary_file": "operator-manual-metrics.md.summary.md"
+    },
+    "proposals/proxy-extensions.md": {
+      "hash": "6286266a17afb72f330964f16028cb6690bf704395a5f055a26f9641166d3b8a",
+      "generated": "2026-06-22T12:46:54.814439",
+      "summary_file": "proposals-proxy-extensions.md.summary.md"
+    },
+    "operator-manual/rbac.md": {
+      "hash": "aefb8b76120f5bee475bb9082e63b09fb997c0c8a036900e591c2f1dbe14e922",
+      "generated": "2026-06-22T12:46:55.923290",
+      "summary_file": "operator-manual-rbac.md.summary.md"
+    },
+    "operator-manual/upgrading/2.14-3.0.md": {
+      "hash": "e81691f4f29af7ff5c7fa286affd6faaf717512a30a3d24457d6e5a32d191a83",
+      "generated": "2026-06-22T12:46:56.741557",
+      "summary_file": "operator-manual-upgrading-2.14-3.0.md.summary.md"
+    },
+    "proposals/deletion-strategy-progressive-sync.md": {
+      "hash": "c65ed3e4ce6c40fbaf1dcee348ff50971a2a6adadd45f91544308dc8f04cd0d9",
+      "generated": "2026-06-22T12:47:03.226427",
+      "summary_file": "proposals-deletion-strategy-progressive-sync.md.summary.md"
+    },
+    "proposals/manifest-hydrator.md": {
+      "hash": "3a4882b17c87d1cf7e365fd7733fc8ee30b4c5a114c5efb4adf801e9a3ca6e85",
+      "generated": "2026-06-22T12:47:04.516249",
+      "summary_file": "proposals-manifest-hydrator.md.summary.md"
+    },
+    "proposals/parameterized-config-management-plugins.md": {
+      "hash": "d14cff18f7ed0dc71eebef2ad5baaf6f0cfe4cb21db93923743984e4e17c3ee1",
+      "generated": "2026-06-22T12:47:04.841496",
+      "summary_file": "proposals-parameterized-config-management-plugins.md.summary.md"
+    },
+    "proposals/003-applications-outside-argocd-namespace.md": {
+      "hash": "02710673263c4510f25c392e45be9319b352ba457c6eeb69ccd96f906da97499",
+      "generated": "2026-06-22T12:47:06.799823",
+      "summary_file": "proposals-003-applications-outside-argocd-namespace.md.summary.md"
+    },
+    "operator-manual/declarative-setup.md": {
+      "hash": "83440a8405a4076a58dbecd894078983391343b23ff44b3028369b2ad6f0af2e",
+      "generated": "2026-06-22T12:47:07.314099",
+      "summary_file": "operator-manual-declarative-setup.md.summary.md"
+    },
+    "operator-manual/high_availability.md": {
+      "hash": "f5efb0453905f144b8b6925ef36e1911f87c46c614d8201b7663cb964063897c",
+      "generated": "2026-06-22T12:47:13.857369",
+      "summary_file": "operator-manual-high_availability.md.summary.md"
+    },
+    "proposals/decouple-application-sync-user-using-impersonation.md": {
+      "hash": "6409321f6e6db5c3f47f30f30a4227cc8c659e1de6797cde7ee0d5e2840d5d49",
+      "generated": "2026-06-22T12:47:14.213027",
+      "summary_file": "proposals-decouple-application-sync-user-using-impersonation.md.summary.md"
+    },
+    "operator-manual/config-management-plugins.md": {
+      "hash": "9e2d1e125b2bcba6643618a0a3539f7650f7932b8847bcace6732bb33b4d5c23",
+      "generated": "2026-06-22T12:47:14.674276",
+      "summary_file": "operator-manual-config-management-plugins.md.summary.md"
+    },
+    "operator-manual/ingress.md": {
+      "hash": "3473ff1b44c5e64ac61a4fb149b4081d060f91e4d0da3d3aa8518abbbec92d8a",
+      "generated": "2026-06-22T12:47:18.304230",
+      "summary_file": "operator-manual-ingress.md.summary.md"
+    },
+    "faq.md": {
+      "hash": "bd938d7e40f9e25b2cd039656fd83ecd8e1c1e0baaf9df23b6e2c160cfecbaad",
+      "generated": "2026-06-22T12:47:20.624645",
+      "summary_file": "faq.md.summary.md"
+    }
+  },
+  "updated": "2026-06-22T12:47:20.624681"
+}
