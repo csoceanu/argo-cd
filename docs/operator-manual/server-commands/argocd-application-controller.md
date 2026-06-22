@@ -81,6 +81,8 @@ argocd-application-controller [flags]
       --server-side-diff-enabled                                  Feature flag to enable ServerSide diff. Default ("false")
       --sharding-method string                                    Enables choice of sharding method. Supported sharding methods are : [legacy, round-robin, consistent-hashing]  (default "legacy")
       --status-processors int                                     Number of application status processors (default 20)
+      --sync-rate-limit-burst int                                 Number of rapid syncs allowed before rate limiting kicks in. Accommodates legitimate bursts during initial deployments (default 3)
+      --sync-rate-limit-interval int                              Minimum seconds between consecutive syncs for the same application. Prevents sync storms from overloading the controller. 0 disables rate limiting (default 0)
       --sync-timeout int                                          Specifies the timeout after which a sync would be terminated. 0 means no timeout (default 0).
       --tls-server-name string                                    If provided, this name will be used to validate server certificate. If this is not provided, hostname used to contact the server is used.
       --token string                                              Bearer token for authentication to the API server
@@ -93,4 +95,3 @@ argocd-application-controller [flags]
       --wq-cooldown-ns duration                                   Set Workqueue Per Item Rate Limiter Cooldown duration in ns, default 0(per item rate limiter disabled)
       --wq-maxdelay-ns duration                                   Set Workqueue Per Item Rate Limiter Max Delay duration in nanoseconds, default 1000000000 (1s) (default 1s)
 ```
-
