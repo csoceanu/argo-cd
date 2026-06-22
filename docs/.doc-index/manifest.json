@@ -178,7 +178,7 @@
       }
     },
     "operator-manual/server-commands": {
-      "built": "2026-06-22T17:58:08.038990",
+      "built": "2026-06-22T18:21:59.342832",
       "doc_hashes": {
         "operator-manual/server-commands/argocd-dex_rundex.md": "1bf3c2c24e834df5fcf28bb0cd55f56014e484d565224dd2b6864695e0bb7e71",
         "operator-manual/server-commands/argocd-repo-server.md": "b1d2a52781a58cacb70a90086286ec4a402d9af5b981ed0eebfc3bb9d1d1cf7b",
@@ -187,7 +187,7 @@
         "operator-manual/server-commands/argocd-server_version.md": "f4aca5cb61fb417b3be7397487450863c4a4847a6f7333e4006c876d6b48bb8d",
         "operator-manual/server-commands/argocd-server.md": "6d3c8869b471a8833278164383accc1a9cee7f67244094f109513d4612a116cc",
         "operator-manual/server-commands/argocd-applicationset-controller.md": "f3dd07675ad55b6bc8f3e030e9c116da548d6d41ea7a341f68d442c78902d952",
-        "operator-manual/server-commands/argocd-application-controller.md": "4bae9e14eb3e1babbd16ce564fbc9a079f881d5b1861ad7ebb1e026f0113a880",
+        "operator-manual/server-commands/argocd-application-controller.md": "149e199be7d1cba7dc9197e686b011a7e343e7514d1994e808c764e23d7c5237",
         "operator-manual/server-commands/additional-configuration-method.md": "13a3178849bff4e7504ad52e2de84d7b61a8a6e8d32fa444a1b1f8cb74010b2d"
       }
     },
@@ -512,5 +512,5 @@
       }
     }
   },
-  "updated": "2026-06-22T18:00:07.406800"
+  "updated": "2026-06-22T18:21:59.363602"
 }
