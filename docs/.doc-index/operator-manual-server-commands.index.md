@@ -1,44 +1,41 @@
 # OPERATOR-MANUAL/SERVER-COMMANDS Documentation Index
 
 ## Overview
-This documentation area provides comprehensive command references and configuration guides for the core server-side components of Argo CD. It details the operational flags, environment settings, and configuration methods required to run the API server, repository server, application controllers, and identity management (Dex) utilities.
+This documentation area provides a comprehensive reference for the command-line interfaces and configuration options of the core Argo CD server-side components. It details the operational flags, environment-specific settings, and internal utility commands required to run the API server, state controllers, repository management services, and authentication providers.
 
 ## Files Summary
-* **argocd-dex_rundex.md**: Provides the command reference for running the Dex server using settings derived from Argo CD’s internal ConfigMaps and Secrets.
-* **argocd-repo-server.md**: Details the Repository Server, which handles Git repository local caching and the generation of Kubernetes manifests from source code.
-* **argocd-dex.md**: Serves as the parent entry point for internal Dex-related utility tools used within the Argo CD ecosystem.
-* **argocd-dex_gendexcfg.md**: Explains the command used to manually generate a Dex configuration file based on current Argo CD settings.
-* **argocd-server_version.md**: Document the specific flags for the version subcommand of the API server, used to retrieve build and version metadata.
-* **argocd-server.md**: The primary reference for the Argo CD API server, covering gRPC/REST endpoints, authentication, OIDC, and global cache settings.
-* **argocd-applicationset-controller.md**: Describes the controller responsible for managing ApplicationSet resources and automating multi-application generation via SCM/PR generators.
-* **argocd-application-controller.md**: Detailed reference for the core application controller that reconciles the live state of the cluster with the desired state in Git.
-* **additional-configuration-method.md**: Explains how to use the `argocd-cmd-params-cm.yaml` ConfigMap to configure server components globally as an alternative to CLI flags.
+*   **argocd-application-controller.md**: Detailed reference for the core controller that monitors live clusters and reconciles them with the desired state defined in Git.
+*   **argocd-applicationset-controller.md**: Reference for the controller that automates the generation of Argo CD Applications using various generators (SCM, Git, etc.).
+*   **argocd-dex.md**: The root command reference for the integrated Dex identity service utility tools.
+*   **argocd-dex_gendexcfg.md**: Documentation for the utility that transforms Argo CD ConfigMap settings into a valid Dex configuration file.
+*   **argocd-dex_rundex.md**: Instructions for running the Dex server using settings dynamically pulled from Argo CD’s Kubernetes secrets and configmaps.
+*   **argocd-repo-server.md**: Reference for the service responsible for cloning repositories, caching manifests, and invoking config management tools like Helm or Kustomize.
+*   **argocd-server.md**: Primary reference for the Argo CD API server, which hosts the Web UI, serves the gRPC/REST API, and manages authentication.
+*   **argocd-server_version.md**: Specific documentation for the command used to retrieve the API server's version and build information.
+*   **additional-configuration-method.md**: Explains how to use the `argocd-cmd-params-cm.yaml` ConfigMap as an alternative to command-line flags for global configuration.
 
 ## Code Changes That Would Require Documentation Updates
-* **Flag Modifications**: Adding, renaming, or removing CLI flags in the Go source code for any server component (e.g., adding a new `--enable-feature-x` flag).
-* **Default Value Changes**: Changing the default value of any configuration parameter (e.g., increasing `default-cache-expiration` or changing a default port).
-* **New Subcommands**: Adding new sub-functional commands to `argocd-server`, `argocd-dex`, or other binaries.
-* **Cache Logic Updates**: Modifications to how Redis, repository state, or OIDC state is cached or expired.
-* **Integration Extensions**: Adding support for new SCM providers, OCI media types, or OpenTelemetry (OTLP) attributes.
-* **Scaling & Performance Tuning**: Changes to parallelism limits (webhook, manifest generation, or kubectl execution) and sharding methods.
-* **Security Enhancements**: Updates to TLS cipher suites, minimum/maximum TLS versions, or RBAC impersonation logic.
-* **ConfigMap Schema Changes**: Updating the `argocd-cmd-params-cm` mapping logic or adding new prefixes for component configuration.
-* **Experimental Features**: Transitioning experimental features (like Hydrator or Progressive Syncs) to GA or changing their activation flags.
+*   **CLI Flag Modifications**: Adding, removing, or renaming flags in the Go source code (typically via the Cobra library) for any server component.
+*   **Default Value Adjustments**: Changing default port numbers, timeout durations, or cache expiration intervals in the component initialization logic.
+*   **New Feature Toggles**: Introducing new experimental features (e.g., Hydrator, Progressive Syncs, or Server-Side Diff) that require a flag to enable.
+*   **Caching Logic Updates**: Modifying how components interact with Redis or changing the schema of `argocd-cmd-params-cm.yaml`.
+*   **Security/TLS Policy Changes**: Updating supported TLS versions, cipher suites, or introducing new authentication impersonation parameters.
+*   **Manifest Generation Parameters**: Changing how the repo-server handles OCI media types, Helm archive limits, or symlink security policies.
+*   **Scaling and Sharding**: Implementing new sharding methods (e.g., consistent hashing) or reconciliation algorithms in the application controller.
+*   **Metric and Trace Extensions**: Adding new OpenTelemetry (OTLP) attributes or Prometheus metric labels to the server components.
 
 ## Key Technical Concepts
-* **Server Components**: `argocd-server`, `argocd-repo-server`, `argocd-application-controller`, `argocd-applicationset-controller`, `argocd-dex`.
-* **Caching Infrastructure**: Redis, Redis Sentinel, `repo-cache-expiration`, `app-state-cache-expiration`, compression algorithms (gzip/none).
-* **Authentication & Identity**: Dex, OIDC, JWT tokens, impersonation (`--as`, `--as-group`), Basic Auth.
-* **Manifest Generation**: Helm, OCI, Git hidden directories, `allow-oob-symlinks`, manifest size limits.
-* **Observability**: OpenTelemetry (OTLP), Prometheus metrics, log formats (JSON/Text), log levels.
-* **Reconciliation & Sync**: Self-healing backoff, sharding methods (legacy, round-robin, consistent-hashing), hard resync, workqueue tuning.
-* **Global Configuration**: `argocd-cmd-params-cm`, `kubeconfig` contexts, namespace scoping.
+*   **Controllers**: `argocd-application-controller` (reconciliation), `argocd-applicationset-controller` (automation).
+*   **Manifest Management**: `argocd-repo-server`, manifest generation, OCI/Helm caching, parallelism limits.
+*   **API & Auth**: `argocd-server`, gRPC/REST, Dex, OIDC, RBAC impersonation (`--as`), Bearer tokens.
+*   **Configuration Management**: `argocd-cmd-params-cm.yaml`, prefix-based flag mapping (e.g., `controller.`, `reposerver.`).
+*   **High Availability**: Controller sharding (legacy, round-robin, consistent-hashing), Redis Sentinel, leader election.
+*   **Observability**: Log formats (json/text), OTLP (OpenTelemetry) tracing, Prometheus metrics endpoints.
+*   **Networking**: TLS min/max versions, cipher suites, proxy URLs, and gRPC/HTTP endpoint configuration.
 
 ## Related Components
-* **Argo CD API Server**: The central gateway for UI and CLI interaction.
-* **Repository Server**: The internal manifest generation engine.
-* **Application/ApplicationSet Controllers**: The logic engines for state reconciliation.
-* **Dex Server**: The integrated identity provider for SSO.
-* **Redis**: The state and manifest cache provider.
-* **Kubernetes API Server**: The underlying platform where Argo CD reconciles resources.
-* **OpenTelemetry Collector**: External system for receiving traces and metrics.
+*   **Redis**: Used for state caching across the API server, repo-server, and controllers.
+*   **Kubernetes API Server**: The primary target for resource reconciliation and the source of truth for Argo CD configurations.
+*   **Dex**: The internal identity provider service for OIDC/SAML integration.
+*   **Git/OCI Providers**: External systems that host the desired state manifests managed by the repo-server.
+*   **OpenTelemetry Collector**: External sink for traces and telemetry data generated by server components.
