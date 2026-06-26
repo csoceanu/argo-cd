@@ -2100,6 +2100,7 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 		output                  string
 		appNamespace            string
 		ignoreNormalizerOpts    normalizers.IgnoreNormalizerOpts
+		syncWarnMessage         string
 	)
 	command := &cobra.Command{
 		Use:   "sync [APPNAME... | -l selector | --project project-name]",
@@ -2410,6 +2411,9 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 
 					if !dryRun {
 						if !opState.Phase.Successful() {
+							if syncWarnMessage != "" {
+								log.Warnf("Sync warning for %s: %s", appQualifiedName, syncWarnMessage)
+							}
 							log.Fatalf("Operation has completed with phase: %s", opState.Phase)
 						} else if len(selectedResources) == 0 && app.Status.Sync.Status != argoappv1.SyncStatusCodeSynced {
 							// Only get resources to be pruned if sync was application-wide and final status is not synced
@@ -2453,6 +2457,7 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 	command.Flags().StringArrayVar(&revisions, "revisions", []string{}, "Show manifests at specific revisions for source position in source-positions")
 	command.Flags().Int64SliceVar(&sourcePositions, "source-positions", []int64{}, "List of source positions. Default is empty array. Counting start at 1.")
 	command.Flags().StringArrayVar(&sourceNames, "source-names", []string{}, "List of source names. Default is an empty array.")
+	command.Flags().StringVar(&syncWarnMessage, "sync-warn-message", "", "Custom warning message to display when sync operation fails. Useful for adding context about known issues or required manual steps.")
 	return command
 }
 
