@@ -23,6 +23,8 @@ argocd version [flags]
   # Print only client and server core version strings in YAML format
   argocd version --short -o yaml
 
+  # Print version with additional build and dependency details
+  argocd version --verbose
 ```
 
 ### Options
@@ -51,6 +53,7 @@ argocd version [flags]
       --token string                   Bearer token for authentication to the API server
       --user string                    The name of the kubeconfig user to use
       --username string                Username for basic authentication to the API server
+      --verbose                        include additional build and dependency information
 ```
 
 ### Options inherited from parent commands
@@ -87,4 +90,3 @@ argocd version [flags]
 ### SEE ALSO
 
 * [argocd](argocd.md)	 - argocd controls a Argo CD server
-

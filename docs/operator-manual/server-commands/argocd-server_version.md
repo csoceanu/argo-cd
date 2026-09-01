@@ -11,8 +11,9 @@ argocd-server version [flags]
 ### Options
 
 ```
-  -h, --help    help for version
-      --short   print just the version number
+  -h, --help      help for version
+      --short     print just the version number
+      --verbose   include additional build and dependency information
 ```
 
 ### Options inherited from parent commands
@@ -43,4 +44,3 @@ argocd-server version [flags]
 ### SEE ALSO
 
 * [argocd-server](argocd-server.md)	 - Run the ArgoCD API server
-
